@@ -1,0 +1,1 @@
+export class SelfError extends Error {}

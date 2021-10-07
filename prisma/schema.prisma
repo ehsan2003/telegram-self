@@ -1,0 +1,31 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:../db.sqlite"
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
+model shekar {
+  id       String @id 
+  username String
+  phone    String
+
+  @@index([id], map: "id")
+  @@index([username], map: "username")
+}
+
+model PreparedText{
+  id String @id @default(cuid())
+  text String
+  identifier String @unique
+  tags PreparedTextCategory[]
+}
+
+model PreparedTextCategory {
+  id String @id @default(cuid())
+  name String 
+  texts PreparedText[]
+}

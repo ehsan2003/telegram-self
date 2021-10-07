@@ -1,0 +1,7 @@
+node_modules
+# Keep environment variables out of version control
+.env
+telegram_session
+dist
+db.sqlite
+yarn-error.log
