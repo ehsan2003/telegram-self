@@ -1,5 +1,5 @@
 import {CommandHandlerBase} from "./CommandHandler.base";
-import yargs, {Argv} from "yargs";
+import yargs from "yargs";
 import {NewMessageEvent} from "telegram/events";
 import _ from 'lodash';
 import {SelfError} from "../../SelfError";
@@ -17,14 +17,14 @@ export class PreparedTextHandler extends CommandHandlerBase<Args> {
     private async sendText(args: { textId: string } | { category: string }, event: NewMessageEvent) {
         let textToSend = await this.getTextToSend(args);
         if (textToSend) {
-            await event.message.edit({text: textToSend.text});
+            await event.message.edit({text: textToSend.text, parseMode: 'html'});
         } else {
             throw new SelfError('text not found');
         }
     }
 
     private validateOrThrow(args: Args) {
-        if (('textId' in args && !!args.textId) !== ('category' in args && !!args.category)) {
+        if (('textId' in args && !!args.textId) === ('category' in args && !!args.category)) {
             throw new SelfError('you should send one of ( and only on of ) category or textId');
         }
     }
@@ -41,9 +41,7 @@ export class PreparedTextHandler extends CommandHandlerBase<Args> {
     getArgumentParser(): yargs.Argv<Args> {
         return yargs
             .option('textId', {string: true, alias: 't'})
-            .option('category', {string: true, alias: 'c'})
-            .conflicts('textId', 'category') as Argv<Args>;
-
+            .option('category', {string: true, alias: 'c'}) as any
     }
 
     getName(): string {

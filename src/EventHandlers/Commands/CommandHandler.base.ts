@@ -2,7 +2,6 @@ import {EventHandler} from "../EventHandler.base";
 import {NewMessage, NewMessageEvent} from "telegram/events";
 import yargs from "yargs";
 import {SelfError} from "../../SelfError";
-import stringArgv from 'string-argv';
 
 export abstract class CommandHandlerBase<T> extends EventHandler<NewMessageEvent> {
     shouldHandle(event: NewMessageEvent): Promise<boolean> {
@@ -18,7 +17,7 @@ export abstract class CommandHandlerBase<T> extends EventHandler<NewMessageEvent
     }
 
 
-    private async parseArguments(rawArguments: string[]) {
+    private async parseArguments(rawArguments: string) {
         const parser = this.getArgumentParser().fail(false);
         try {
             return parser.parse(rawArguments)
@@ -28,7 +27,7 @@ export abstract class CommandHandlerBase<T> extends EventHandler<NewMessageEvent
     }
 
     private getRawArguments(messageText: string) {
-        return stringArgv(messageText.replace(this.getPattern(), '$1').trim());
+        return messageText.match(this.getPattern())![1].trim();
     }
 
     getNewMessage(): NewMessage {
@@ -39,7 +38,7 @@ export abstract class CommandHandlerBase<T> extends EventHandler<NewMessageEvent
     }
 
     private getPattern() {
-        return new RegExp(`!${this.getName()}\\s?(.*)`);
+        return new RegExp(`!${this.getName()}(.*)`);
     }
 
     abstract getName(): string;
