@@ -1,15 +1,15 @@
 import {Context} from "../Context";
-import {EventHandler} from "./EventHandler.base";
-import {DebugHandler} from "./Commands/DebugMessage";
-import {PreparedTextHandler} from "./Commands/PreparedTextHandler";
-import {FancyType} from "./Commands/FancyType";
-import {DeleteMe} from "./Commands/DeleteMe";
+import {DebugMessageFactory} from "./Commands/DebugMessage";
+import {EventHandlerFactory} from "./EventHandlerFactory.base";
+import {DeleteMeFactory} from "./Commands/DeleteMe";
+import {FancyTypeFactory} from "./Commands/FancyType";
+import {PreparedTextFactory} from "./Commands/PreparedTextHandler";
 
-export async function getHandlers(ctx: Context): Promise<EventHandler[]> {
+export async function getFactories(ctx: Context): Promise<EventHandlerFactory[]> {
     return [
-        new DebugHandler(ctx),
-        new PreparedTextHandler(ctx),
-        new FancyType(ctx),
-        new DeleteMe(ctx),
+        new DebugMessageFactory(ctx),
+        new DeleteMeFactory(ctx),
+        new FancyTypeFactory(ctx),
+        new PreparedTextFactory(ctx)
     ];
 }

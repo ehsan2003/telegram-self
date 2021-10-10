@@ -1,8 +1,9 @@
 import {CommandHandlerBase} from "./CommandHandler.base";
 import {NewMessageEvent} from "telegram/events";
-import yargs, {Arguments} from "yargs";
+import yargs from "yargs";
 import {SelfError} from "../../SelfError";
 import {helpers} from "telegram";
+import {CommandHandlerFactory} from "./CommandHandlerFactory.base";
 import ms = require('ms');
 
 type Args = {
@@ -10,14 +11,14 @@ type Args = {
 }
 
 export class FancyType extends CommandHandlerBase<Args> {
-    async execute(event: NewMessageEvent, args: Arguments<Args>): Promise<void> {
-        this.validateOrFail(args);
+    async execute(): Promise<void> {
+        this.validateOrFail();
 
-        const text = args._[0].toString();
+        const text = this.args._[0].toString();
         const frames = this.getFrames(text);
         for (const frame of frames) {
-            await event.message.edit({text: frame})
-            await helpers.sleep(args.delay);
+            await this.event.message.edit({text: frame})
+            await helpers.sleep(this.args.delay);
         }
     }
 
@@ -35,10 +36,16 @@ export class FancyType extends CommandHandlerBase<Args> {
         return result;
     }
 
-    private validateOrFail(args: Arguments<Args>) {
-        if (!args._[0]) {
+    private validateOrFail() {
+        if (!this.args._[0]) {
             throw new SelfError('argument required');
         }
+    }
+}
+
+export class FancyTypeFactory extends CommandHandlerFactory {
+    createInstance(event: NewMessageEvent, args: yargs.Arguments<Args>): Promise<CommandHandlerBase<any>> {
+        return Promise.resolve(new FancyType(this.ctx, event, args));
     }
 
     getArgumentParser(): yargs.Argv<Args> {
@@ -53,4 +60,5 @@ export class FancyType extends CommandHandlerBase<Args> {
     getName(): string {
         return "type";
     }
+
 }

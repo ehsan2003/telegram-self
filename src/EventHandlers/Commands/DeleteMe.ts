@@ -1,25 +1,35 @@
 import {CommandHandlerBase} from "./CommandHandler.base";
 import {NewMessageEvent} from "telegram/events";
 import yargs from "yargs";
+import {CommandHandlerFactory} from "./CommandHandlerFactory.base";
 
 export type Args = {
     count: number
 }
 
 export class DeleteMe extends CommandHandlerBase<Args> {
-    async execute(event: NewMessageEvent, {count}: yargs.Arguments<Args>): Promise<void> {
-        console.log(count)
-        await event.message.delete({})
-        const myMessages = await this.getMyMessages(event, count)
-        console.log('found messages:', count, myMessages.length);
-        await this.ctx.client.deleteMessages(event.chatId!, myMessages.map(msg => msg.id), {});
+    async execute(): Promise<void> {
+        console.log(this.args.count)
+        await this.event.message.delete({})
+        const myMessages = await this.getMyMessages()
+        console.log('found messages:', this.args.count, myMessages.length);
+        await this.ctx.client.deleteMessages(this.event.chatId!, myMessages.map(msg => msg.id), {});
     }
 
-    private async getMyMessages(event: NewMessageEvent, count: number) {
-        return this.ctx.client.getMessages(event.chatId!, {
+    private async getMyMessages() {
+        return this.ctx.client.getMessages(this.event.chatId!, {
             fromUser: 'me',
-            limit: count
+            limit: this.args.count
         });
+    }
+
+
+}
+
+export class DeleteMeFactory extends CommandHandlerFactory {
+    createInstance(event: NewMessageEvent, args: yargs.Arguments<Args>): Promise<CommandHandlerBase<any>> {
+
+        return Promise.resolve(new DeleteMe(this.ctx, event, args))
     }
 
     getArgumentParser(): yargs.Argv<Args> {
@@ -29,4 +39,5 @@ export class DeleteMe extends CommandHandlerBase<Args> {
     getName(): string {
         return "deleteme";
     }
+
 }
