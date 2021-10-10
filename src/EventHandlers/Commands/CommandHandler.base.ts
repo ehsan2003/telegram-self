@@ -3,7 +3,7 @@ import {NewMessage, NewMessageEvent} from "telegram/events";
 import yargs from "yargs";
 import {SelfError} from "../../SelfError";
 
-export abstract class CommandHandlerBase<T> extends EventHandler<NewMessageEvent> {
+export abstract class CommandHandlerBase<T> extends EventHandler {
     shouldHandle(event: NewMessageEvent): Promise<boolean> {
         return Promise.resolve(true);
     }
@@ -37,13 +37,13 @@ export abstract class CommandHandlerBase<T> extends EventHandler<NewMessageEvent
         });
     }
 
-    private getPattern() {
+    getPattern() {
         return new RegExp(`!${this.getName()}(.*)`);
     }
 
-    abstract getName(): string;
+    protected abstract getName(): string;
 
-    abstract getArgumentParser(): yargs.Argv<T>
+    protected abstract getArgumentParser(): yargs.Argv<T>
 
-    abstract execute(event: NewMessageEvent, args: yargs.Arguments<T>): Promise<void>
+    protected abstract execute(event: NewMessageEvent, args: yargs.Arguments<T>): Promise<void>
 }

@@ -1,11 +1,23 @@
 import {CommandHandlerBase} from "./CommandHandler.base";
+import yaml from 'yaml';
 import yargs from "yargs";
 import {NewMessageEvent} from "telegram/events";
-import yaml from 'yaml';
 import {Message} from "telegram/tl/custom/message";
 import _ from 'lodash';
 import {SelfError} from "../../SelfError";
 
+const getCircularReplacer = () => {
+    const seen = new WeakSet();
+    return (key: string, value: any) => {
+        if (typeof value === "object" && value !== null) {
+            if (seen.has(value)) {
+                return;
+            }
+            seen.add(value);
+        }
+        return value;
+    };
+};
 
 interface Args {
     chat?: boolean;
@@ -13,7 +25,6 @@ interface Args {
 
 export class DebugHandler extends CommandHandlerBase<Args> {
     async execute(event: NewMessageEvent, args: Args): Promise<void> {
-
         const reply = await this.getReply(event);
 
         const msgToSend = this.ctx.common.prepareLongMessage(
@@ -34,10 +45,8 @@ export class DebugHandler extends CommandHandlerBase<Args> {
         return reply;
     }
 
-    private stringifyReply(reply: Message) {
-        return yaml.stringify(
-            _.omit(reply, ["_eventBuilders", "client", "_client"])
-        );
+    private stringifyReply(reply: Message): string {
+        return yaml.stringify(JSON.parse(JSON.stringify(_.omit(reply, ["_eventBuilders", "_client", "client"]), getCircularReplacer())));
     }
 
     getArgumentParser(): yargs.Argv<Args> {
@@ -47,6 +56,4 @@ export class DebugHandler extends CommandHandlerBase<Args> {
     getName(): string {
         return "debugmsg";
     }
-
-
 }

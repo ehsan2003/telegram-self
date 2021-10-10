@@ -5,7 +5,7 @@ import {PreparedTextHandler} from "./Commands/PreparedTextHandler";
 import {FancyType} from "./Commands/FancyType";
 import {DeleteMe} from "./Commands/DeleteMe";
 
-export async function getHandlers(ctx: Context): Promise<EventHandler<any>[]> {
+export async function getHandlers(ctx: Context): Promise<EventHandler[]> {
     return [
         new DebugHandler(ctx),
         new PreparedTextHandler(ctx),
