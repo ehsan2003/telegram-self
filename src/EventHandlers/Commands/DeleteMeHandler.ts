@@ -7,7 +7,7 @@ export type Args = {
     count: number
 }
 
-export class DeleteMe extends CommandHandlerBase<Args> {
+export class DeleteMeHandler extends CommandHandlerBase<Args> {
     async execute(): Promise<void> {
         console.log(this.args.count)
         await this.event.message.delete({})
@@ -29,7 +29,7 @@ export class DeleteMe extends CommandHandlerBase<Args> {
 export class DeleteMeFactory extends CommandHandlerFactory {
     createInstance(event: NewMessageEvent, args: yargs.Arguments<Args>): Promise<CommandHandlerBase<any>> {
 
-        return Promise.resolve(new DeleteMe(this.ctx, event, args))
+        return Promise.resolve(new DeleteMeHandler(this.ctx, event, args))
     }
 
     getArgumentParser(): yargs.Argv<Args> {

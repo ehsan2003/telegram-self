@@ -41,8 +41,7 @@ async function handleError(e: any, event: any, ctx: Context) {
 async function main() {
     const ctx = await createContext();
     const allHandlers = await getFactories(ctx);
-    console.log("running");
-
+    ctx.logger.info('running');
     ctx.client.addEventHandler(async (event) => {
         for (const handlerFactory of allHandlers) {
             try {

@@ -24,7 +24,8 @@ export abstract class CommandHandlerFactory extends EventHandlerFactory {
         const parser = this.getArgumentParser().fail(false);
         try {
             return parser.parse(rawArguments)
-        } catch {
+        } catch (e) {
+            console.log(e);
             throw new SelfError(await parser.wrap(50).getHelp());
         }
     }

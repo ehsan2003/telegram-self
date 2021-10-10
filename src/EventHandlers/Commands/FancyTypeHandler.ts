@@ -10,7 +10,7 @@ type Args = {
     delay: number;
 }
 
-export class FancyType extends CommandHandlerBase<Args> {
+export class FancyTypeHandler extends CommandHandlerBase<Args> {
     async execute(): Promise<void> {
         this.validateOrFail();
 
@@ -45,7 +45,7 @@ export class FancyType extends CommandHandlerBase<Args> {
 
 export class FancyTypeFactory extends CommandHandlerFactory {
     createInstance(event: NewMessageEvent, args: yargs.Arguments<Args>): Promise<CommandHandlerBase<any>> {
-        return Promise.resolve(new FancyType(this.ctx, event, args));
+        return Promise.resolve(new FancyTypeHandler(this.ctx, event, args));
     }
 
     getArgumentParser(): yargs.Argv<Args> {
