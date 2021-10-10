@@ -7,6 +7,9 @@ import {Common} from "./Common";
 import {Logger} from "telegram";
 import {SelfError} from "./SelfError";
 import {NewMessage} from "telegram/events";
+import {Subject} from "rxjs";
+import {EventCommon} from "telegram/events/common";
+import {ProcessManager} from "./Processes/ProcessManager";
 
 dotenv.config({debug: true});
 
@@ -20,11 +23,17 @@ if (!process.env.API_HASH) {
 }
 
 async function createContext(): Promise<Context> {
+    const client = await initializeClient();
+    const eventsSubject = new Subject<EventCommon>();
+    client.addEventHandler((event: EventCommon) => eventsSubject.next(event))
+
     return {
-        client: await initializeClient(),
+        client: client,
         prisma: new PrismaClient(),
         common: new Common(),
         logger: new Logger("warn"),
+        eventsSubject: eventsSubject,
+        processManager: new ProcessManager()
     };
 }
 
