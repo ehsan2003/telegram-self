@@ -26,11 +26,11 @@ async function createContext(): Promise<Context> {
     const client = await initializeClient();
     const eventsSubject = new Subject<EventCommon>();
     client.addEventHandler((event: EventCommon) => eventsSubject.next(event))
-
+    const prisma = new PrismaClient();
     return {
         client: client,
-        prisma: new PrismaClient(),
-        common: new Common(),
+        prisma: prisma,
+        common: new Common(client, prisma),
         logger: new Logger("warn"),
         eventsSubject: eventsSubject,
         processManager: new ProcessManager()
@@ -40,7 +40,7 @@ async function createContext(): Promise<Context> {
 async function handleError(e: any, event: any, ctx: Context) {
     if (e instanceof SelfError) {
         await event.message.delete({})
-        await ctx.common.sendError(ctx.client, e.message);
+        await ctx.common.sendError(e.message);
         console.log(e);
     } else {
         throw e;

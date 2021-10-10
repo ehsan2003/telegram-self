@@ -1,6 +1,5 @@
 import {CommandHandlerBase} from "./CommandHandler.base";
 import yargs from "yargs";
-import _ from 'lodash';
 import {SelfError} from "../../SelfError";
 import {CommandHandlerFactory} from "./CommandHandlerFactory.base";
 import {NewMessageEvent} from "telegram/events";
@@ -28,8 +27,7 @@ export class PreparedTextHandler extends CommandHandlerBase<Args> {
         if ('textId' in this.args) {
             return await this.ctx.prisma.preparedText.findUnique({where: {identifier: this.args.textId as string}});
         } else {
-            const preparedTexts = await this.ctx.prisma.preparedText.findMany({where: {tags: {some: {name: this.args.category as string}}}});
-            return _.sample(preparedTexts)
+            return this.ctx.common.getRandomTextByCategory(this.args.category as string);
         }
     }
 
