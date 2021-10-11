@@ -21,12 +21,19 @@ export abstract class CommandHandlerFactory extends EventHandlerFactory {
     abstract createInstance(event: NewMessageEvent, args: Arguments): Promise<CommandHandlerBase<any>>
 
     private async parseArguments(rawArguments: string) {
-        const parser = this.getArgumentParser().fail(false);
+        const parser = this.getArgumentParser()
+            .fail(false)
+            .exitProcess(false);
         try {
-            return parser.parse(rawArguments)
+            // ugly code because of some hacks for making yargs compatible to our telegram interface
+            const args = await parser.parse(rawArguments)
+            if (args.help) {
+                throw new Error();
+            }
+            return args
         } catch (e) {
             console.log(e);
-            throw new SelfError(await parser.wrap(50).getHelp());
+            throw new SelfError(await parser.wrap(50).getHelp() + '\n' + e.message);
         }
     }
 
