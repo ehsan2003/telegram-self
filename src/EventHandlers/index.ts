@@ -7,6 +7,7 @@ import {PreparedTextFactory} from "./Commands/PreparedTextHandler";
 import {DownloadHandlerFactory} from "./Commands/DownloadHandler";
 import {SpamStartHandlerFactory} from "./Commands/SpamStarter";
 import {ProcessStopHandlerFactory} from "./Commands/ProcessStopHandler";
+import {ProcessStatsHandlerFactory} from "./Commands/ProcessStats";
 
 export async function getFactories(ctx: Context): Promise<EventHandlerFactory[]> {
     return [
@@ -16,6 +17,7 @@ export async function getFactories(ctx: Context): Promise<EventHandlerFactory[]>
         new PreparedTextFactory(ctx),
         new DownloadHandlerFactory(ctx),
         new SpamStartHandlerFactory(ctx),
-        new ProcessStopHandlerFactory(ctx)
+        new ProcessStopHandlerFactory(ctx),
+        new ProcessStatsHandlerFactory(ctx)
     ];
 }
