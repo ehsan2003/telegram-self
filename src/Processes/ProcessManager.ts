@@ -42,7 +42,7 @@ export class ProcessManager {
 
         if (process) {
             process._clear();
-            this.processes.splice(processId, 1);
+            this.processes = this.processes.filter(({process: Pin}) => Pin !== process);
         } else {
             throw new SelfError('no such process');
         }
@@ -57,6 +57,9 @@ export class ProcessManager {
     }
 
     public getStats(): string {
+        if (!this.processes.length) {
+            return 'no running process';
+        }
         return 'id\tname\tdate\n' +
             this.processes.map(processRepresentation => `${processRepresentation.id}\t${processRepresentation.name}\t${processRepresentation.startedAt.toISOString()}`).join('\n');
     }
