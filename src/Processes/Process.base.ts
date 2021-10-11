@@ -1,6 +1,6 @@
 import {Context} from "../Context";
 
-export abstract class Process<T> {
+export abstract class Process<T = any> {
     constructor(protected ctx: Context, protected args: T) {
     }
 
