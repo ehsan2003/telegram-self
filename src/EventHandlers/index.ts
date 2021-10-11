@@ -5,6 +5,7 @@ import {DeleteMeFactory} from "./Commands/DeleteMeHandler";
 import {FancyTypeFactory} from "./Commands/FancyTypeHandler";
 import {PreparedTextFactory} from "./Commands/PreparedTextHandler";
 import {DownloadHandlerFactory} from "./Commands/DownloadHandler";
+import {SpamStartHandlerFactory} from "./Commands/SpamStarter";
 
 export async function getFactories(ctx: Context): Promise<EventHandlerFactory[]> {
     return [
@@ -13,5 +14,6 @@ export async function getFactories(ctx: Context): Promise<EventHandlerFactory[]>
         new FancyTypeFactory(ctx),
         new PreparedTextFactory(ctx),
         new DownloadHandlerFactory(ctx),
+        new SpamStartHandlerFactory(ctx)
     ];
 }
