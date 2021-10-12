@@ -2,7 +2,6 @@ import {Context} from "./Context";
 import dotenv from "dotenv";
 import {PrismaClient} from ".prisma/client";
 import {initializeClient} from "./initializeClient";
-import {getFactories} from "./EventHandlers";
 import {Common} from "./Common";
 import {Logger} from "telegram";
 import {SelfError} from "./SelfError";
@@ -10,6 +9,8 @@ import {NewMessage} from "telegram/events";
 import {Subject} from "rxjs";
 import {EventCommon} from "telegram/events/common";
 import {ProcessManager} from "./Processes/ProcessManager";
+import parseArgsStringToArgv from "string-argv";
+import {createCommandExecutor} from "./CommandBehaviours/createCommandExecutor";
 
 dotenv.config({debug: true});
 
@@ -47,20 +48,30 @@ async function handleError(e: any, event: any, ctx: Context) {
     }
 }
 
+const commandPattern = /!([a-z]+)(\s(.*))?/;
+
+function extractCommandAndArguments(message: string): { name: string, args: string[] } {
+    const matchResult = message.match(commandPattern)!
+    return {
+        args: parseArgsStringToArgv(matchResult[3]),
+        name: matchResult[0]
+    }
+}
+
 async function main() {
     const ctx = await createContext();
-    const allHandlers = await getFactories(ctx);
+    const executor = createCommandExecutor(ctx);
+
     ctx.logger.info('running');
     ctx.client.addEventHandler(async (event) => {
-        for (const handlerFactory of allHandlers) {
-            try {
-                if (await handlerFactory.canHandle(event)) await (await handlerFactory.createHandler(event)).handle();
-            } catch (e) {
-                await handleError(e, event, ctx);
-            }
+        const {args, name} = extractCommandAndArguments(event.message.message!);
+        try {
+            await executor.executeCommand(event, name, args);
+        } catch (e) {
+            await handleError(e, event, ctx);
         }
 
-    }, new NewMessage({}));
+    }, new NewMessage({outgoing: true, pattern: commandPattern}));
 
 }
 
