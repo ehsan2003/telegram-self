@@ -54,7 +54,7 @@ function extractCommandAndArguments(message: string): { name: string, args: stri
     const matchResult = message.match(commandPattern)!
     return {
         args: parseArgsStringToArgv(matchResult[3]),
-        name: matchResult[0]
+        name: matchResult[1]
     }
 }
 
@@ -65,6 +65,7 @@ async function main() {
     ctx.logger.info('running');
     ctx.client.addEventHandler(async (event) => {
         const {args, name} = extractCommandAndArguments(event.message.message!);
+        ctx.logger.info(`event "${name}" happened with args :"${args}"`);
         try {
             await executor.executeCommand(event, name, args);
         } catch (e) {
