@@ -8,6 +8,7 @@ import {DeleteMeFactory} from "./Commands/DeleteMe/DeleteMeFactory";
 import {NotifyAllRepresentation} from "./Commands/NotifyAll/NotifyAllRepresentation";
 import {PreparedTextSenderRepresentation} from "./Commands/PreparedTextSender/PreparedTextSenderRepresentation";
 import {NotifyGroupRepresentation} from "./Commands/NotifyGroup/NotifyGroupRepresentation";
+import {NotifyAdminsRepresentation} from "./Commands/NotifyAdmins/NotifyAdminsRepresentation";
 
 export function createCommandExecutor(ctx: Context): CommandExecutor {
     const executor = new CommandExecutor(ctx);
@@ -19,6 +20,7 @@ export function createCommandExecutor(ctx: Context): CommandExecutor {
     executor.bind('notifyall', new NotifyAllRepresentation(ctx))
     executor.bind('text', new PreparedTextSenderRepresentation(ctx));
     executor.bind('notifygroup', new NotifyGroupRepresentation(ctx));
+    executor.bind('notifyadmins', new NotifyAdminsRepresentation(ctx));
     // place factories here
     return executor;
 }
