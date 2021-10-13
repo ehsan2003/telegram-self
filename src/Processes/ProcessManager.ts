@@ -1,10 +1,10 @@
-import {Process} from "./Process.base";
+import {IProcess} from "./IProcess";
 import {SelfError} from "../SelfError";
 
 export interface ProcessRepresentation {
     name?: string;
     id: number;
-    process: Process;
+    process: IProcess;
     startedAt: Date;
 }
 
@@ -16,12 +16,12 @@ export class ProcessManager {
      * @param process
      * @param name
      */
-    run(process: Process, name?: string) {
+    run(process: IProcess, name?: string) {
         if (name && this.getProcessRepresentationByName(name)) throw new SelfError(`duplicate name ${name}`);
 
         const pid = this.getRandomPid();
         this.processes.unshift({process, name, id: pid, startedAt: new Date()});
-        process._start();
+        process.start();
     }
 
     private getRandomPid() {
@@ -41,7 +41,7 @@ export class ProcessManager {
         const process = this.getProcessRepresentationById(processId)?.process;
 
         if (process) {
-            process._clear();
+            process.clear();
             this.processes = this.processes.filter(({process: Pin}) => Pin !== process);
         } else {
             throw new SelfError('no such process');
