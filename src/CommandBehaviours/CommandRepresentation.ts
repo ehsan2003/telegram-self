@@ -3,8 +3,12 @@ import {ICommandHandler} from "./ICommandHandler";
 import {NewMessageEvent} from "telegram/events";
 import {detailed, DetailedArguments, Options} from "yargs-parser";
 import {SelfError} from "../SelfError";
+import {Context} from "../Context";
 
 export abstract class CommandRepresentation<ParsedArgs extends DetailedArguments, ValidatedArguments> implements ICommandFactory {
+    constructor(protected ctx: Context) {
+    }
+
     async createHandler(event: NewMessageEvent, rawArguments: string[]): Promise<ICommandHandler> {
         const argumentsOptions = this.getArgumentsOptions();
         const args = detailed(rawArguments, argumentsOptions);
