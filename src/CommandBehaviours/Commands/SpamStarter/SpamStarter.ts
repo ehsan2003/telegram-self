@@ -6,7 +6,7 @@ import {SelfError} from "../../../SelfError";
 import {Arguments} from "yargs-parser";
 
 export type SpamStarterArgs = {
-    chat: string;
+    chatId: string;
     interval: number;
     textCategory: string;
     name: string;
@@ -22,7 +22,7 @@ export class SpamStarter implements ICommandHandler {
     }
 
     private async getSpamProcessArguments() {
-        const chatId = isNaN(+this.args.chat) ? this.args.chat : +this.args.chat;
+        const chatId = isNaN(+this.args.chatId) ? this.args.chatId : +this.args.chatId;
         const result: Partial<SpamProcessArgs> = {}
         const chat = await this.ctx.client.getEntity(chatId).catch(() => null);
         if (!chat) {
