@@ -1,33 +1,19 @@
 import {ICommandHandler} from "../../ICommandHandler";
 import {Context} from "../../../Context";
 import {NewMessageEvent} from "telegram/events";
-import {chunk} from "lodash";
-import {Api, utils} from "telegram";
-import {sleep} from "telegram/Helpers";
+import {NotifyBase, NotifyBaseArgs} from "../Notify.base";
 
-export type NotifyAllArguments = {
-    countPerMessage: number;
-    delayBetweenMessages: number;
-}
+export type NotifyAllArguments = NotifyBaseArgs
 
-export class NotifyAll implements ICommandHandler {
-    constructor(private ctx: Context, private event: NewMessageEvent, private args: NotifyAllArguments) {
+export class NotifyAll extends NotifyBase implements ICommandHandler {
+
+    constructor(protected ctx: Context, protected event: NewMessageEvent, protected args: NotifyAllArguments) {
+        super(ctx, event, args);
     }
 
     async handle(): Promise<void> {
         const participants = await this.ctx.client.getParticipants(this.event.chatId!, {});
-        const chunks = chunk(participants, this.args.countPerMessage)
-        for (const chunk of chunks) {
-            await this.ctx.client.sendMessage(this.event.chatId!, {
-                message: this.getMessageForChunk(chunk),
-                parseMode: 'html'
-            })
-            await sleep(this.args.delayBetweenMessages);
-        }
-    }
-
-    private getMessageForChunk(chunk: Api.User[]): string {
-        return chunk.map(user => `<a href="tg://user?id=${user.id}">${utils.getDisplayName(user)}</a>`).join(' ')
+        await this.notifyUsers(participants);
     }
 
 }
