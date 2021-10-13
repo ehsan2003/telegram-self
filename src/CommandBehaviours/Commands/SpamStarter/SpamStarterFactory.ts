@@ -17,7 +17,7 @@ export class SpamStarterFactory implements ICommandFactory {
     private parseArguments(raw: string[]): SpamStarterArgs {
         const parsed = yargsParser.detailed(raw, {
             number: ['interval'],
-            string: ['chatId', 'textCategory'],
+            string: ['chatId', 'textCategory', 'name'],
             alias: {interval: 'i', textCategory: 't', chatId: 'c'},
             default: {
                 interval: 1000,

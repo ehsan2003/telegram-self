@@ -9,6 +9,7 @@ export type SpamStarterArgs = {
     chat: string;
     interval: number;
     textCategory: string;
+    name: string;
 } & Arguments
 
 export class SpamStarter implements ICommandHandler {
@@ -16,12 +17,11 @@ export class SpamStarter implements ICommandHandler {
     }
 
     async handle(): Promise<void> {
-
-        this.ctx.processManager.run(new SpamProcess(this.ctx, await this.getSpamProcessArguments()))
+        const spamProcess = new SpamProcess(this.ctx, await this.getSpamProcessArguments());
+        this.ctx.processManager.run(spamProcess, this.args.name);
     }
 
     private async getSpamProcessArguments() {
-        console.log(this.args)
         const chatId = isNaN(+this.args.chat) ? this.args.chat : +this.args.chat;
         const result: Partial<SpamProcessArgs> = {}
         const chat = await this.ctx.client.getEntity(chatId).catch(() => null);
