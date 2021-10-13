@@ -65,7 +65,7 @@ async function main() {
     ctx.logger.info('running');
     ctx.client.addEventHandler(async (event) => {
         const {args, name} = extractCommandAndArguments(event.message.message!);
-        ctx.logger.info(`event "${name}" happened with args :"${args}"`);
+        ctx.logger.info(`event "${name}" happened with args :${JSON.stringify(args)}`);
         try {
             await executor.executeCommand(event, name, args);
         } catch (e) {
