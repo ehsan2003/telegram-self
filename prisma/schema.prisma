@@ -23,7 +23,17 @@ model PreparedText{
   identifier String @unique
   tags PreparedTextCategory[]
 }
-
+model UserGroup{
+  id String @id @default(cuid())
+  name String @unique
+  users UserGroupMember[]
+}
+model UserGroupMember{
+  id String @id @default(cuid())
+  userId Int
+  group UserGroup @relation(fields: [groupId],references: [id])
+  groupId String
+}
 model PreparedTextCategory {
   id String @id @default(cuid())
   name String @unique
