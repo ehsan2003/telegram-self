@@ -3,6 +3,7 @@ import {TelegramClient} from "telegram";
 import {PreparedText, PrismaClient} from '@prisma/client'
 import _ from "lodash";
 import {SelfError} from "./SelfError";
+import * as Joi from 'joi';
 
 export class Common {
     constructor(protected client: TelegramClient, protected prisma: PrismaClient) {
@@ -22,6 +23,14 @@ export class Common {
         }
 
         return _.sample(preparedTexts) as PreparedText;
+    }
+
+    validateJoi(validator: Joi.Schema, value: any) {
+        const {error, value: validated} = validator.validate(value, {stripUnknown: true});
+        if (error) {
+            throw new SelfError(error.message);
+        }
+        return validated;
     }
 
     public prepareLongMessage(text: string): SendMessageParams {
