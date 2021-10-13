@@ -24,7 +24,7 @@ export class NotifyAllRepresentation extends CommandRepresentation<Partial<Notif
             countPerMessage: Joi.number().min(2).default(5),
             delayBetweenMessages: Joi.number().positive().default(500)
         })
-        const {error, value: validatedArguments} = validator.validate(parsedArgs, {stripUnknown: true})
+        const {error, value: validatedArguments} = validator.validate(parsedArgs.argv, {stripUnknown: true})
         if (error) {
             throw new SelfError(error.message);
         }
