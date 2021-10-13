@@ -4,6 +4,7 @@ import {DebugMessageFactory} from "./Commands/DebugMessage/DebugMessageFactory";
 import {SpamStarterFactory} from "./Commands/SpamStarter/SpamStarterFactory";
 import {ProcessStatsFactory} from "./Commands/PorcessStats/ProcessStatsFactory";
 import {ProcessStopperFactory} from "./Commands/ProcessStopper/ProcessStopperFactory";
+import {DeleteMeFactory} from "./Commands/DeleteMe/DeleteMeFactory";
 
 export function createCommandExecutor(ctx: Context): CommandExecutor {
     const executor = new CommandExecutor(ctx);
@@ -11,6 +12,7 @@ export function createCommandExecutor(ctx: Context): CommandExecutor {
     executor.bind('spam', new SpamStarterFactory(ctx));
     executor.bind('pstats', new ProcessStatsFactory(ctx));
     executor.bind('pstop', new ProcessStopperFactory(ctx));
+    executor.bind('deleteme', new DeleteMeFactory(ctx));
     // place factories here
     return executor;
 }
