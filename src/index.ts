@@ -5,7 +5,7 @@ import {initializeClient} from "./initializeClient";
 import {Common} from "./Common";
 import {Logger} from "telegram";
 import {SelfError} from "./SelfError";
-import {NewMessage} from "telegram/events";
+import {NewMessage, NewMessageEvent} from "telegram/events";
 import {Subject} from "rxjs";
 import {EventCommon} from "telegram/events/common";
 import {ProcessManager} from "./Processes/ProcessManager";
@@ -38,10 +38,12 @@ async function createContext(): Promise<Context> {
     };
 }
 
-async function handleError(e: any, event: any, ctx: Context) {
+async function handleError(e: any, event: NewMessageEvent, ctx: Context) {
     if (e instanceof SelfError) {
+        const forwarded = await event.message.forwardTo('me');
+
         await event.message.delete({})
-        await ctx.common.tellUser(e.message);
+        await ctx.client.sendMessage('me', {...ctx.common.prepareLongMessage(e.message), replyTo: forwarded![0]!.id});
         console.log(e);
     } else {
         throw e;
