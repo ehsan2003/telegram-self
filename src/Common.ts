@@ -37,7 +37,7 @@ export class Common {
         }
     }
 
-    public async sendError(msg: string) {
+    public async tellUser(msg: string) {
         await this.client.sendMessage('me', this.prepareLongMessage(msg));
     }
 }

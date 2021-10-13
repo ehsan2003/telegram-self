@@ -41,7 +41,7 @@ async function createContext(): Promise<Context> {
 async function handleError(e: any, event: any, ctx: Context) {
     if (e instanceof SelfError) {
         await event.message.delete({})
-        await ctx.common.sendError(e.message);
+        await ctx.common.tellUser(e.message);
         console.log(e);
     } else {
         throw e;
