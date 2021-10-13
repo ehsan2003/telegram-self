@@ -1,5 +1,6 @@
 import {IProcess} from "./IProcess";
 import {SelfError} from "../SelfError";
+import _ from 'lodash';
 
 export interface ProcessRepresentation {
     name?: string;
@@ -25,8 +26,8 @@ export class ProcessManager {
     }
 
     private getRandomPid() {
-        // return _.random(1, 1000, false);
-        return 1;
+        return _.random(1, 1000, false);
+        // return 1;
     }
 
     public stopByName(name: string) {
@@ -61,6 +62,6 @@ export class ProcessManager {
             return 'no running process';
         }
         return 'id\tname\tdate\n' +
-            this.processes.map(processRepresentation => `${processRepresentation.id}\t${processRepresentation.name}\t${processRepresentation.startedAt.toISOString()}`).join('\n');
+            this.processes.map(processRepresentation => `${processRepresentation.id}\t${processRepresentation.name || '-'}\t${processRepresentation.startedAt.toISOString()}`).join('\n');
     }
 }
