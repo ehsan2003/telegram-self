@@ -44,7 +44,6 @@ async function handleError(e: any, event: NewMessageEvent, ctx: Context) {
 
         await event.message.delete({})
         await ctx.client.sendMessage('me', {...ctx.common.prepareLongMessage(e.message), replyTo: forwarded![0]!.id});
-        console.log(e);
     } else {
         throw e;
     }
@@ -55,7 +54,7 @@ const commandPattern = /!([a-z]+)(\s(.*))?/;
 function extractCommandAndArguments(message: string): { name: string, args: string[] } {
     const matchResult = message.match(commandPattern)!
     return {
-        args: parseArgsStringToArgv(matchResult[3]),
+        args: matchResult[3] ? parseArgsStringToArgv(matchResult[3]) : [],
         name: matchResult[1]
     }
 }
