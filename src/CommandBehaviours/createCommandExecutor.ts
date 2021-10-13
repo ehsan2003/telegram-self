@@ -6,6 +6,7 @@ import {ProcessStatsFactory} from "./Commands/PorcessStats/ProcessStatsFactory";
 import {ProcessStopperFactory} from "./Commands/ProcessStopper/ProcessStopperFactory";
 import {DeleteMeFactory} from "./Commands/DeleteMe/DeleteMeFactory";
 import {NotifyAllRepresentation} from "./Commands/NotifyAll/NotifyAllRepresentation";
+import {PreparedTextSenderRepresentation} from "./Commands/PreparedTextSender/PreparedTextSenderRepresentation";
 
 export function createCommandExecutor(ctx: Context): CommandExecutor {
     const executor = new CommandExecutor(ctx);
@@ -15,6 +16,7 @@ export function createCommandExecutor(ctx: Context): CommandExecutor {
     executor.bind('pstop', new ProcessStopperFactory(ctx));
     executor.bind('deleteme', new DeleteMeFactory(ctx));
     executor.bind('notifyall', new NotifyAllRepresentation(ctx))
+    executor.bind('text', new PreparedTextSenderRepresentation(ctx));
     // place factories here
     return executor;
 }
