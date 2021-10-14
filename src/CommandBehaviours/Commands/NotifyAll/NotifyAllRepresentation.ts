@@ -1,12 +1,12 @@
 import {CommandRepresentation} from "../../CommandRepresentation";
 import {NotifyAll, NotifyAllArguments} from "./NotifyAll";
-import {Arguments, Options} from "yargs-parser";
+import {Options} from "yargs-parser";
 import {ICommandHandler} from "../../ICommandHandler";
 import {NewMessageEvent} from "telegram/events";
 import * as Joi from 'joi';
 import {validateJoi} from "../../../utils";
 
-export class NotifyAllRepresentation extends CommandRepresentation<Partial<NotifyAllArguments> & Arguments, NotifyAllArguments> {
+export class NotifyAllRepresentation extends CommandRepresentation<Partial<NotifyAllArguments>, NotifyAllArguments> {
     factory(event: NewMessageEvent, validatedArguments: NotifyAllArguments): Promise<ICommandHandler> | ICommandHandler {
         return new NotifyAll(this.ctx, event, validatedArguments);
     }
@@ -19,7 +19,7 @@ export class NotifyAllRepresentation extends CommandRepresentation<Partial<Notif
         }
     }
 
-    validateArguments(parsedArgs: Partial<NotifyAllArguments> & Arguments): Promise<NotifyAllArguments> | NotifyAllArguments {
+    validateArguments(parsedArgs: Partial<NotifyAllArguments> ): Promise<NotifyAllArguments> | NotifyAllArguments {
         const validator = Joi.object({
             countPerMessage: Joi.number().min(2).default(5),
             delayBetweenMessages: Joi.number().positive().default(500)

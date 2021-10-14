@@ -1,12 +1,12 @@
 import {CommandRepresentation} from "../../CommandRepresentation";
 import {NotifyGroup, NotifyGroupArgs} from "./NotifyGroup";
-import yargsParser, {Arguments} from "yargs-parser";
+import yargsParser from "yargs-parser";
 import {NewMessageEvent} from "telegram/events";
 import {ICommandHandler} from "../../ICommandHandler";
 import * as Joi from 'joi';
 import {validateJoi} from "../../../utils";
 
-export class NotifyGroupRepresentation extends CommandRepresentation<Partial<NotifyGroupArgs> & Arguments, NotifyGroupArgs> {
+export class NotifyGroupRepresentation extends CommandRepresentation<Partial<NotifyGroupArgs> , NotifyGroupArgs> {
     factory(event: NewMessageEvent, validatedArguments: NotifyGroupArgs): Promise<ICommandHandler> | ICommandHandler {
         return new NotifyGroup(this.ctx, event, validatedArguments);
     }

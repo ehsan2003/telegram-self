@@ -6,7 +6,7 @@ import {ICommandHandler} from "../../ICommandHandler";
 import * as Joi from 'joi';
 import {validateJoi} from "../../../utils";
 
-export class PreparedTextSenderRepresentation extends CommandRepresentation<Partial<{ textId: string; textCategory: string; }> & Arguments, PreparedTextSenderArgs> {
+export class PreparedTextSenderRepresentation extends CommandRepresentation<Partial<{ textId: string; textCategory: string; }>, PreparedTextSenderArgs> {
     factory(event: NewMessageEvent, validatedArguments: PreparedTextSenderArgs): Promise<ICommandHandler> | ICommandHandler {
         return new PreparedTextSender(this.ctx, event, validatedArguments);
     }

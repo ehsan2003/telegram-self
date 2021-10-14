@@ -1,32 +1,27 @@
-import {ICommandFactory} from "../../CommandFactory";
 import {NewMessageEvent} from "telegram/events";
 import {ICommandHandler} from "../../ICommandHandler";
 import {SpamStarter, SpamStarterArgs} from "./SpamStarter";
-import {Context} from "../../../Context";
 import yargsParser from "yargs-parser";
-import {SelfError} from "../../../SelfError";
+import {CommandRepresentation} from "../../CommandRepresentation";
 
-export class SpamStarterFactory implements ICommandFactory {
-    constructor(private ctx: Context) {
+export class SpamStarterFactory extends CommandRepresentation<SpamStarterArgs, SpamStarterArgs> {
+    factory(event: NewMessageEvent, validatedArguments: SpamStarterArgs): Promise<ICommandHandler> | ICommandHandler {
+        return new SpamStarter(this.ctx, event, validatedArguments);
     }
 
-    createHandler(event: NewMessageEvent, rawArguments: string[]): Promise<ICommandHandler> | ICommandHandler {
-        return new SpamStarter(this.ctx, event, this.parseArguments(rawArguments));
-    }
-
-    private parseArguments(raw: string[]): SpamStarterArgs {
-        const parsed = yargsParser.detailed(raw, {
+    getArgumentsOptions(): yargsParser.Options {
+        return {
             number: ['interval'],
             string: ['chatId', 'textCategory', 'name'],
             alias: {interval: 'i', textCategory: 't', chatId: 'c'},
             default: {
                 interval: 1000,
             }
-        });
-        if (parsed.error) {
-            throw new SelfError(parsed.error.message);
         }
-        return parsed.argv as SpamStarterArgs;
+    }
+
+    validateArguments(parsedArgs: SpamStarterArgs): Promise<SpamStarterArgs> | SpamStarterArgs {
+        return parsedArgs;
     }
 
 }

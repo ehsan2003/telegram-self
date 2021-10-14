@@ -1,26 +1,21 @@
-import {ICommandFactory} from "../../CommandFactory";
-import {Context} from "../../../Context";
 import {NewMessageEvent} from "telegram/events";
 import {ICommandHandler} from "../../ICommandHandler";
 import yargsParser from "yargs-parser";
-import {SelfError} from "../../../SelfError";
 import {ProcessStopper, ProcessStopperArgs} from "./ProcessStopper";
+import {CommandRepresentation} from "../../CommandRepresentation";
+import {validateJoi} from "../../../utils";
+import * as Joi from 'joi';
 
-export class ProcessStopperFactory implements ICommandFactory {
-    createHandler(event: NewMessageEvent, rawArguments: string[]): Promise<ICommandHandler> | ICommandHandler {
-        const args = this.parseArguments(rawArguments);
-        return new ProcessStopper(this.ctx, event, args);
+export class ProcessStopperFactory extends CommandRepresentation<ProcessStopperArgs, ProcessStopperArgs> {
+    factory(event: NewMessageEvent, validatedArguments: ProcessStopperArgs): Promise<ICommandHandler> | ICommandHandler {
+        return new ProcessStopper(this.ctx, event, validatedArguments);
     }
 
-    private parseArguments(raw: string[]): ProcessStopperArgs {
-        const parsed = yargsParser.detailed(raw, {string: ['name', 'id']});
-        if (parsed.error) {
-            throw new SelfError(parsed.error.message);
-        }
-        return parsed.argv as ProcessStopperArgs;
+    getArgumentsOptions(): yargsParser.Options {
+        return {string: ['name', 'id']}
     }
 
-    constructor(private ctx: Context) {
+    validateArguments(parsedArgs: ProcessStopperArgs): Promise<ProcessStopperArgs> | ProcessStopperArgs {
+        return validateJoi(Joi.object({id: Joi.number().integer(), name: Joi.string()}).xor('id', 'name'), parsedArgs)
     }
-
 }
