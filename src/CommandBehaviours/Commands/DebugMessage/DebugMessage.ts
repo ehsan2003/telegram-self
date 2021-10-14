@@ -4,20 +4,8 @@ import {NewMessageEvent} from "telegram/events";
 import {Arguments} from "yargs-parser";
 import {SelfError} from "../../../SelfError";
 import {stringify} from 'yaml';
-import {prepareLongMessage} from "../../../utils";
+import {getCircularReplacer, prepareLongMessage} from "../../../utils";
 
-const getCircularReplacer = () => {
-    const seen = new WeakSet();
-    return (key: string, value: any) => {
-        if (typeof value === "object" && value !== null) {
-            if (seen.has(value)) {
-                return;
-            }
-            seen.add(value);
-        }
-        return value;
-    };
-};
 export type DebugMessageArgs = {
     chat: boolean;
 } & Arguments
