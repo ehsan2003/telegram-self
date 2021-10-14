@@ -4,6 +4,7 @@ import {NewMessageEvent} from "telegram/events";
 import {Arguments} from "yargs-parser";
 import {SelfError} from "../../../SelfError";
 import {stringify} from 'yaml';
+import {prepareLongMessage} from "../../../utils";
 
 const getCircularReplacer = () => {
     const seen = new WeakSet();
@@ -30,7 +31,7 @@ export class DebugMessage implements ICommandHandler {
         if (!reply) {
             throw new SelfError('no reply for debug message');
         }
-        await this.ctx.client.sendMessage(this.args.chat ? this.event.chatId! : 'me', this.ctx.common.prepareLongMessage(this.stringify(reply)));
+        await this.ctx.client.sendMessage(this.args.chat ? this.event.chatId! : 'me', prepareLongMessage(this.stringify(reply)));
     }
 
     private stringify(reply: any) {

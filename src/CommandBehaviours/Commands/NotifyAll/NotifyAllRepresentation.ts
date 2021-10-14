@@ -4,7 +4,7 @@ import {Arguments, Options} from "yargs-parser";
 import {ICommandHandler} from "../../ICommandHandler";
 import {NewMessageEvent} from "telegram/events";
 import * as Joi from 'joi';
-import {SelfError} from "../../../SelfError";
+import {validateJoi} from "../../../utils";
 
 export class NotifyAllRepresentation extends CommandRepresentation<Partial<NotifyAllArguments> & Arguments, NotifyAllArguments> {
     factory(event: NewMessageEvent, validatedArguments: NotifyAllArguments): Promise<ICommandHandler> | ICommandHandler {
@@ -24,11 +24,7 @@ export class NotifyAllRepresentation extends CommandRepresentation<Partial<Notif
             countPerMessage: Joi.number().min(2).default(5),
             delayBetweenMessages: Joi.number().positive().default(500)
         })
-        const {error, value: validatedArguments} = validator.validate(parsedArgs, {stripUnknown: true})
-        if (error) {
-            throw new SelfError(error.message);
-        }
-        return validatedArguments;
+        return validateJoi(validator,parsedArgs);
     }
 
 }

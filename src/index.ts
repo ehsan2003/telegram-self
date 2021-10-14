@@ -11,6 +11,7 @@ import {EventCommon} from "telegram/events/common";
 import {ProcessManager} from "./Processes/ProcessManager";
 import parseArgsStringToArgv from "string-argv";
 import {createCommandExecutor} from "./CommandBehaviours/createCommandExecutor";
+import {prepareLongMessage} from "./utils";
 
 dotenv.config({debug: true});
 
@@ -43,7 +44,7 @@ async function handleError(e: any, event: NewMessageEvent, ctx: Context) {
         const forwarded = await event.message.forwardTo('me');
 
         await event.message.delete({})
-        await ctx.client.sendMessage('me', {...ctx.common.prepareLongMessage(e.message), replyTo: forwarded![0]!.id});
+        await ctx.client.sendMessage('me', {...prepareLongMessage(e.message), replyTo: forwarded![0]!.id});
     } else {
         throw e;
     }

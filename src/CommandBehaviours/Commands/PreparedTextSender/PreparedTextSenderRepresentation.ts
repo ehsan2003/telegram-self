@@ -4,7 +4,7 @@ import yargsParser, {Arguments} from "yargs-parser";
 import {NewMessageEvent} from "telegram/events";
 import {ICommandHandler} from "../../ICommandHandler";
 import * as Joi from 'joi';
-import {SelfError} from "../../../SelfError";
+import {validateJoi} from "../../../utils";
 
 export class PreparedTextSenderRepresentation extends CommandRepresentation<Partial<{ textId: string; textCategory: string; }> & Arguments, PreparedTextSenderArgs> {
     factory(event: NewMessageEvent, validatedArguments: PreparedTextSenderArgs): Promise<ICommandHandler> | ICommandHandler {
@@ -24,11 +24,7 @@ export class PreparedTextSenderRepresentation extends CommandRepresentation<Part
             textCategory: Joi.string()
         }).xor('textId', 'textCategory');
 
-        const {error, value: validated} = validator.validate(parsedArgs, {stripUnknown: true});
-        if (error) {
-            throw new SelfError(error.message)
-        }
-        return validated;
+        return validateJoi(validator, parsedArgs);
     }
 
 }
