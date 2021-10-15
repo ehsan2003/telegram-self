@@ -3,11 +3,10 @@ import dotenv from "dotenv";
 import {PrismaClient} from ".prisma/client";
 import {initializeClient} from "./initializeClient";
 import {Common} from "./Common";
-import {Logger} from "telegram";
+import {Api, Logger} from "telegram";
 import {SelfError} from "./SelfError";
 import {NewMessage, NewMessageEvent} from "telegram/events";
 import {Subject} from "rxjs";
-import {EventCommon} from "telegram/events/common";
 import {ProcessManager} from "./Processes/ProcessManager";
 import parseArgsStringToArgv from "string-argv";
 import {createCommandExecutor} from "./CommandBehaviours/createCommandExecutor";
@@ -26,8 +25,8 @@ if (!process.env.API_HASH) {
 
 async function createContext(): Promise<Context> {
     const client = await initializeClient();
-    const eventsSubject = new Subject<EventCommon>();
-    client.addEventHandler((event: EventCommon) => eventsSubject.next(event))
+    const eventsSubject = new Subject<Api.TypeUpdate>();
+    client.addEventHandler((event: Api.TypeUpdate) => eventsSubject.next(event))
     const prisma = new PrismaClient();
     return {
         client: client,
