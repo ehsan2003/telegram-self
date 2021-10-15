@@ -9,6 +9,7 @@ import {PreparedTextSenderRepresentation} from "./Commands/PreparedTextSender/Pr
 import {NotifyGroupRepresentation} from "./Commands/NotifyGroup/NotifyGroupRepresentation";
 import {NotifyAdminsRepresentation} from "./Commands/NotifyAdmins/NotifyAdminsRepresentation";
 import {ProcessStats} from "./Commands/PorcessStats/ProcessStats";
+import {WatcherProcessStarterRepresentation} from "./Commands/WhatcherProcessStarter/WatcherProcessStarterRepresentation";
 
 export function createCommandExecutor(ctx: Context): CommandExecutor {
     const executor = new CommandExecutor(ctx);
@@ -21,6 +22,7 @@ export function createCommandExecutor(ctx: Context): CommandExecutor {
     executor.bind('text', new PreparedTextSenderRepresentation(ctx));
     executor.bind('notifygroup', new NotifyGroupRepresentation(ctx));
     executor.bind('notifyadmins', new NotifyAdminsRepresentation(ctx));
+    executor.bind('watch', new WatcherProcessStarterRepresentation(ctx));
     // place factories here
     return executor;
 }

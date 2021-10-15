@@ -1,6 +1,7 @@
 import * as Joi from "joi";
 import {SelfError} from "./SelfError";
 import {SendMessageParams} from "telegram/client/messages";
+import {Api} from "telegram";
 
 export function validateJoi(validator: Joi.Schema, value: any) {
     const {error, value: validated} = validator.validate(value, {stripUnknown: true});
@@ -35,3 +36,14 @@ export const getCircularReplacer = () => {
         return value;
     };
 };
+
+export function getPeerId(peer: Api.TypePeer) {
+    switch (peer.className) {
+        case "PeerChannel":
+            return peer.channelId;
+        case "PeerChat":
+            return peer.chatId;
+        case "PeerUser":
+            return peer.userId;
+    }
+}
