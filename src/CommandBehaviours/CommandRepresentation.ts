@@ -23,6 +23,6 @@ export abstract class CommandRepresentation<ParsedArgs, ValidatedArguments> impl
 
     abstract getArgumentsOptions(): Options;
 
-    abstract validateArguments(parsedArgs: ParsedArgs): Promise<ValidatedArguments> | ValidatedArguments;
+    abstract validateArguments(parsedArgs: ParsedArgs & Arguments): Promise<ValidatedArguments> | ValidatedArguments;
 
 }
