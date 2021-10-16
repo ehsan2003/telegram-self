@@ -1,24 +1,23 @@
-import {ICommandFactory} from "./CommandFactory";
 import {Context} from "../Context";
 import {SelfError} from "../SelfError";
 import {NewMessageEvent} from "telegram/events";
+import {ICommandHandler} from "./ICommandHandler";
+import {getMessageLikeFromNewMessageEvent} from "../utils";
 
 export class CommandExecutor {
-    private commands: Map<string, ICommandFactory> = new Map();
+    private commands: Map<string, ICommandHandler> = new Map();
 
-    constructor(private ctx: Context) {
-    }
+    constructor(private ctx: Context) {}
 
-    bind(name: string, factory: ICommandFactory) {
-        this.commands.set(name, factory);
+    bind(name: string, handler: ICommandHandler) {
+        this.commands.set(name, handler);
     }
 
     async executeCommand(event: NewMessageEvent, name: string, args: string[]) {
-        const factory = this.commands.get(name);
-        if (!factory) {
+        const handler = this.commands.get(name);
+        if (!handler) {
             throw new SelfError('command not found');
         }
-        const command = await factory.createHandler(event, args);
-        await command.handle();
+        await handler.handle(getMessageLikeFromNewMessageEvent(event), args);
     }
 }

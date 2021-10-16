@@ -2,6 +2,8 @@ import * as Joi from "joi";
 import {SelfError} from "./SelfError";
 import {SendMessageParams} from "telegram/client/messages";
 import {Api} from "telegram";
+import {NewMessageEvent} from "telegram/events";
+import {MessageLike} from "./CommandBehaviours/MessageLike";
 
 export function validateJoi(validator: Joi.Schema, value: any) {
     const {error, value: validated} = validator.validate(value, {stripUnknown: true});
@@ -45,5 +47,13 @@ export function getPeerId(peer: Api.TypePeer) {
             return peer.chatId;
         case "PeerUser":
             return peer.userId;
+    }
+}
+
+export function getMessageLikeFromNewMessageEvent(event: NewMessageEvent): MessageLike {
+    return {
+        chatId: event.chatId!,
+        replyTo: event.message.replyToMsgId,
+        messageId: event.message.id
     }
 }
