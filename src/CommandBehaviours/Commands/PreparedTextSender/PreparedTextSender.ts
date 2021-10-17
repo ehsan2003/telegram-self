@@ -1,30 +1,61 @@
-import {ICommandHandler} from "../../ICommandHandler";
-import {PreparedText} from '@prisma/client';
-import {Context} from "../../../Context";
-import {NewMessageEvent} from "telegram/events";
+import {BaseCommandHandler} from "../../BaseCommandHandler";
+import {PreparedText} from '@prisma/client'
+import yargsParser from "yargs-parser";
+import {MessageLike} from "../../MessageLike";
+import {validateJoi} from "../../../utils";
+import * as Joi from "joi";
 import {SelfError} from "../../../SelfError";
 
 export type PreparedTextSenderArgs = {
     textId: string;
 } | { textCategory: string; };
 
-export class PreparedTextSender implements ICommandHandler {
-    constructor(protected ctx: Context, protected event: NewMessageEvent, protected args: PreparedTextSenderArgs) {
+export class PreparedTextSender extends BaseCommandHandler {
+    protected async execute(message: MessageLike, validatedArgs: PreparedTextSenderArgs): Promise<void> {
+        if (!message.messageId) {
+            throw new SelfError('message id must exists');
+        }
+        let text = await this.preparedText(validatedArgs);
+        await this.ctx.client.editMessage(message.chatId, {text: text.text, message: message.messageId});
     }
 
-    async handle(): Promise<void> {
-        let text: PreparedText;
-        if ('textId' in this.args) {
-            const temp = await this.ctx.prisma.preparedText.findUnique({where: {identifier: this.args.textId}});
+    private async preparedText(validatedArgs: PreparedTextSenderArgs) {
+        if ('textId' in validatedArgs) {
+            const temp = await this.ctx.prisma.preparedText.findUnique({where: {identifier: validatedArgs.textId}});
             if (!temp) {
                 throw new SelfError('text not found');
             }
-            text = temp;
+            return temp;
 
         } else {
-            text = await this.ctx.common.getRandomTextByCategory(this.args.textCategory);
+            return await this.ctx.common.getRandomTextByCategory(validatedArgs.textCategory);
         }
-        await this.event.message.edit({text: text.text});
     }
+
+    protected getArgsParserOptions(): yargsParser.Options {
+        return {
+            string: ['textCategory', 'textId'],
+            alias: {textCategory: 'c', textId: 'i'}
+        };
+    }
+
+    getHelp(): string {
+        return "";
+    }
+
+    getShortHelp(): string {
+        return "";
+    }
+
+    protected validateParsedArgs(parsedArgs: any): any {
+        return validateJoi(Joi.object({
+            textId: Joi.string(),
+            textCategory: Joi.string()
+        }).xor('textId', 'textCategory'), parsedArgs);
+    }
+
+    // async handle(): Promise<void> {
+
+    // }
 
 }

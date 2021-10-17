@@ -6,6 +6,7 @@ import {NotifyAdmins} from "./Commands/NotifyAdmins/NotifyAdmins";
 import {NotifyAll} from "./Commands/NotifyAll/NotifyAll";
 import {NotifyGroup} from "./Commands/NotifyGroup/NotifyGroup";
 import {ProcessStats} from "./Commands/PorcessStats/ProcessStats";
+import {PreparedTextSender} from "./Commands/PreparedTextSender/PreparedTextSender";
 
 export function createCommandExecutor(ctx: Context): CommandExecutor {
     const executor = new CommandExecutor(ctx);
@@ -26,5 +27,6 @@ export function createCommandExecutor(ctx: Context): CommandExecutor {
     executor.bind('notifyall', new NotifyAll(ctx));
     executor.bind('notifygroup', new NotifyGroup(ctx));
     executor.bind('pstats', new ProcessStats(ctx));
+    executor.bind('text', new PreparedTextSender(ctx));
     return executor;
 }
