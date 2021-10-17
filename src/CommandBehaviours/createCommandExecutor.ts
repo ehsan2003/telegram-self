@@ -1,5 +1,6 @@
 import {Context} from "../Context";
 import {CommandExecutor} from "./CommandExecutor";
+import {DebugMessage} from "./Commands/DebugMessage/DebugMessage";
 
 export function createCommandExecutor(ctx: Context): CommandExecutor {
     const executor = new CommandExecutor(ctx);
@@ -14,5 +15,6 @@ export function createCommandExecutor(ctx: Context): CommandExecutor {
     // executor.bind('notifyadmins', new NotifyAdminsRepresentation(ctx));
     // executor.bind('watch', new WatcherProcessStarterRepresentation(ctx));
     // place factories here
+    executor.bind('debugmsg', new DebugMessage(ctx));
     return executor;
 }
