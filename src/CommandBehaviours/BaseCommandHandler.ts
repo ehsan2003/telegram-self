@@ -5,8 +5,7 @@ import {Arguments, detailed, Options} from "yargs-parser";
 import {SelfError} from "../SelfError";
 
 export abstract class BaseCommandHandler<ParsedArgs = any, ValidatedArguments = any> implements ICommandHandler {
-    protected constructor(protected ctx: Context) {
-    }
+    constructor(protected ctx: Context) {}
 
     async handle(messageLike: MessageLike, args: string[]): Promise<void> {
         const parsedArgs = this.parseArgs(args);
@@ -37,7 +36,8 @@ export abstract class BaseCommandHandler<ParsedArgs = any, ValidatedArguments = 
         const parserOptions = this.getArgsParserOptions();
         const parsedArgs = detailed(args, {
             ...parserOptions,
-            boolean: [...parserOptions.boolean || [], 'help', 'chatId', 'replyId'],
+            boolean: [...parserOptions.boolean || [], 'help'],
+            number: [...parserOptions.number || [], 'chatId', 'replyId'],
             alias: {...parserOptions.alias || {}, help: 'h', chatId: 'cid', replyId: 'rid'}
         });
 
@@ -54,7 +54,7 @@ export abstract class BaseCommandHandler<ParsedArgs = any, ValidatedArguments = 
 
     abstract getHelp(): string;
 
-    protected abstract execute(message: MessageLike, parsedArgs: ValidatedArguments): Promise<void>;
+    protected abstract execute(message: MessageLike, validatedArgs: ValidatedArguments): Promise<void>;
 
     protected abstract getArgsParserOptions(): Options;
 
