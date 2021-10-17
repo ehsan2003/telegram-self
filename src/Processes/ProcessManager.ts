@@ -1,6 +1,7 @@
 import {IProcess} from "./IProcess";
 import {SelfError} from "../SelfError";
 import _ from 'lodash';
+import {table} from 'table';
 
 export interface ProcessRepresentation {
     name?: string;
@@ -20,12 +21,12 @@ export class ProcessManager {
     run(process: IProcess, name?: string) {
         if (name && this.getProcessRepresentationByName(name)) throw new SelfError(`duplicate name ${name}`);
 
-        const pid = this.getRandomPid();
+        const pid = this.getNextPid();
         this.processes.unshift({process, name, id: pid, startedAt: new Date()});
         process.start();
     }
 
-    private getRandomPid() {
+    private getNextPid() {
         return _.random(1, 1000, false);
         // return 1;
     }
@@ -61,7 +62,7 @@ export class ProcessManager {
         if (!this.processes.length) {
             return 'no running process';
         }
-        return 'id\tname\tdate\n' +
-            this.processes.map(processRepresentation => `${processRepresentation.id}\t${processRepresentation.name || '-'}\t${processRepresentation.startedAt.toISOString()}`).join('\n');
+        const tableRows = [['id', 'name', 'date'], ...this.processes.map(processRepresentation => [processRepresentation.id, processRepresentation.name, processRepresentation.startedAt.toISOString()])];
+        return table(tableRows)
     }
 }

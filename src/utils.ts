@@ -21,7 +21,8 @@ export function prepareLongMessage(text: string): SendMessageParams {
         };
     } else {
         return {
-            message: "```" + text + "```",
+            message: "<pre>" + text + "</pre>",
+            parseMode:'html',
         };
     }
 }
