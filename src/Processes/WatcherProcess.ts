@@ -27,7 +27,6 @@ export class WatcherProcess implements IProcess {
     }
 
     async start(): Promise<any> {
-        console.log(this.args);
         this.ctx.eventsSubject.pipe(
             takeUntil(this.clearSubject),
             filter((test): test is ForwardableUpdates => 'message' in test && typeof test.message !== 'string' && test.message.className === 'Message' && getPeerId(test.message.peerId) === this.args.chatId)

@@ -13,7 +13,6 @@ export class NotifyAll extends NotifyBase<any, any> {
     }
 
     getUsersForMention(message: MessageLike, args: NotifyBaseArgs): Promise<Api.User[]> {
-        console.log('cid',message.chatId);
         return this.ctx.client.getParticipants(message.chatId, {});
     }
 
