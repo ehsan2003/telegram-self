@@ -1,19 +1,20 @@
-import {ICommandHandler} from "../../ICommandHandler";
-import {Context} from "../../../Context";
-import {NewMessageEvent} from "telegram/events";
 import {NotifyBase, NotifyBaseArgs} from "../Notify.base";
+import {MessageLike} from "../../MessageLike";
+import {Api} from "telegram";
 
-export type NotifyAllArguments = NotifyBaseArgs
 
-export class NotifyAll extends NotifyBase implements ICommandHandler {
-
-    constructor(protected ctx: Context, protected event: NewMessageEvent, protected args: NotifyAllArguments) {
-        super(ctx, event, args);
+export class NotifyAll extends NotifyBase<any, any> {
+    getHelp(): string {
+        return "";
     }
 
-    async handle(): Promise<void> {
-        const participants = await this.ctx.client.getParticipants(this.event.chatId!, {});
-        await this.notifyUsers(participants);
+    getShortHelp(): string {
+        return "";
+    }
+
+    getUsersForMention(message: MessageLike, args: NotifyBaseArgs): Promise<Api.User[]> {
+        console.log('cid',message.chatId);
+        return this.ctx.client.getParticipants(message.chatId, {});
     }
 
 }
