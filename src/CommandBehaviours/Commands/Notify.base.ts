@@ -43,6 +43,7 @@ export abstract class NotifyBase<Parsed extends Partial<NotifyBaseArgs>, Validat
         for (const chunk of chunks) {
             await this.ctx.client.sendMessage(message.chatId, {
                 message: this.getMessageForChunk(chunk),
+                replyTo: message.replyTo,
                 parseMode: 'html'
             })
             await sleep(args.delayBetweenMessages);
