@@ -9,6 +9,7 @@ import {ProcessStats} from "./Commands/PorcessStats/ProcessStats";
 import {PreparedTextSender} from "./Commands/PreparedTextSender/PreparedTextSender";
 import {ProcessStopper} from "./Commands/ProcessStopper/ProcessStopper";
 import {SpamStarter} from "./Commands/SpamStarter/SpamStarter";
+import {WatcherProcessStarter} from "./Commands/WhatcherProcessStarter/WatcherProcessStarter";
 
 export function createCommandExecutor(ctx: Context): CommandExecutor {
     const executor = new CommandExecutor(ctx);
@@ -32,5 +33,6 @@ export function createCommandExecutor(ctx: Context): CommandExecutor {
     executor.bind('text', new PreparedTextSender(ctx));
     executor.bind('pstop', new ProcessStopper(ctx));
     executor.bind('spam', new SpamStarter(ctx));
+    executor.bind('watch', new WatcherProcessStarter(ctx));
     return executor;
 }
