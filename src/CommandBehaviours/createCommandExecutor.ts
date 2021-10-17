@@ -2,6 +2,7 @@ import {Context} from "../Context";
 import {CommandExecutor} from "./CommandExecutor";
 import {DebugMessage} from "./Commands/DebugMessage/DebugMessage";
 import {DeleteMe} from "./Commands/DeleteMe/DeleteMe";
+import {NotifyAdmins} from "./Commands/NotifyAdmins/NotifyAdmins";
 
 export function createCommandExecutor(ctx: Context): CommandExecutor {
     const executor = new CommandExecutor(ctx);
@@ -18,5 +19,6 @@ export function createCommandExecutor(ctx: Context): CommandExecutor {
     // place factories here
     executor.bind('debugmsg', new DebugMessage(ctx));
     executor.bind('deleteme', new DeleteMe(ctx));
+    executor.bind('notifyadmins', new NotifyAdmins(ctx));
     return executor;
 }

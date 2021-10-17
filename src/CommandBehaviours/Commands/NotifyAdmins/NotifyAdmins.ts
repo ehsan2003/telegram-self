@@ -1,15 +1,21 @@
 import {NotifyBase, NotifyBaseArgs} from "../Notify.base";
-import {ICommandHandler} from "../../ICommandHandler";
 import {Api} from "telegram";
+import {MessageLike} from "../../MessageLike";
 
-export type NotifyAdminsArgs = {} & NotifyBaseArgs;
-
-export class NotifyAdmins extends NotifyBase implements ICommandHandler {
-    async handle(): Promise<void> {
-        await this.notifyUsers(await this.getAdmins());
+export class NotifyAdmins extends NotifyBase<any, any> {
+    getAdmins(groupId: number) {
+        return this.ctx.client.getParticipants(groupId, {filter: new Api.ChannelParticipantsAdmins()});
     }
 
-    getAdmins() {
-        return this.ctx.client.getParticipants(this.event.chatId!, {filter: new Api.ChannelParticipantsAdmins()});
+    getHelp(): string {
+        return "mentions admins of a group";
+    }
+
+    getShortHelp(): string {
+        return "";
+    }
+
+    getUsersForMention(message: MessageLike, args: NotifyBaseArgs): Promise<Api.User[]> {
+        return this.getAdmins(message.chatId);
     }
 }
