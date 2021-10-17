@@ -1,9 +1,8 @@
-import {ICommandHandler} from "../../ICommandHandler";
-import {Context} from "../../../Context";
-import {NewMessageEvent} from "telegram/events";
 import {SpamProcess, SpamProcessArgs} from "../../../Processes/SpamProcess";
 import {SelfError} from "../../../SelfError";
-import {Arguments} from "yargs-parser";
+import yargsParser, {Arguments} from "yargs-parser";
+import {BaseCommandHandler} from "../../BaseCommandHandler";
+import {MessageLike} from "../../MessageLike";
 
 export type SpamStarterArgs = {
     chatId: string;
@@ -12,30 +11,46 @@ export type SpamStarterArgs = {
     name: string;
 } & Arguments
 
-export class SpamStarter implements ICommandHandler {
-    constructor(private ctx: Context, private event: NewMessageEvent, private args: SpamStarterArgs) {
-    }
-
-    async handle(): Promise<void> {
-        const spamProcess = new SpamProcess(this.ctx, await this.getSpamProcessArguments());
-        this.ctx.processManager.run(spamProcess, this.args.name);
-    }
-
-    private async getSpamProcessArguments() {
-        const chatId = isNaN(+this.args.chatId) ? this.args.chatId : +this.args.chatId;
+export class SpamStarter extends BaseCommandHandler {
+    protected async validateParsedArgs(args: SpamStarterArgs) {
+        const chatId = isNaN(+args.chatId) ? args.chatId : +args.chatId;
         const result: Partial<SpamProcessArgs> = {}
         const chat = await this.ctx.client.getEntity(chatId).catch(() => null);
         if (!chat) {
             throw new SelfError('chat not found');
         }
         result.chatId = chat.id;
-        const category = await this.ctx.prisma.preparedTextCategory.findUnique({where: {name: this.args.textCategory}});
+        const category = await this.ctx.prisma.preparedTextCategory.findUnique({where: {name: args.textCategory}});
         if (!category) {
             throw new SelfError('text category not found');
         }
         result.textCategory = category.name;
-        result.interval = this.args.interval;
+        result.interval = args.interval;
         return result as SpamProcessArgs;
+    }
+
+    protected async execute(message: MessageLike, validatedArgs: any): Promise<void> {
+        const spamProcess = new SpamProcess(this.ctx, validatedArgs);
+        this.ctx.processManager.run(spamProcess, validatedArgs.name);
+    }
+
+    protected getArgsParserOptions(): yargsParser.Options {
+        return {
+            number: ['interval'],
+            string: ['chatId', 'textCategory', 'name'],
+            alias: {interval: 'i', textCategory: 't', chatId: 'c'},
+            default: {
+                interval: 1000,
+            }
+        };
+    }
+
+    getHelp(): string {
+        return "";
+    }
+
+    getShortHelp(): string {
+        return "";
     }
 
 }
