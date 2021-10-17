@@ -32,6 +32,9 @@ export class CommandExecutor {
             const helpMsg = cmd.getHelp();
             if (helpMsg)
                 await this.ctx.common.tellUser(helpMsg);
+            else
+                throw new SelfError('empty help');
+
         } else {
             await this.ctx.common.tellUser(stringify(Object.fromEntries([...this.commands.entries()].map(([key, handler]) => [key, handler.getShortHelp()]))));
         }
