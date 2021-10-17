@@ -5,6 +5,7 @@ import {DeleteMe} from "./Commands/DeleteMe/DeleteMe";
 import {NotifyAdmins} from "./Commands/NotifyAdmins/NotifyAdmins";
 import {NotifyAll} from "./Commands/NotifyAll/NotifyAll";
 import {NotifyGroup} from "./Commands/NotifyGroup/NotifyGroup";
+import {ProcessStats} from "./Commands/PorcessStats/ProcessStats";
 
 export function createCommandExecutor(ctx: Context): CommandExecutor {
     const executor = new CommandExecutor(ctx);
@@ -24,5 +25,6 @@ export function createCommandExecutor(ctx: Context): CommandExecutor {
     executor.bind('notifyadmins', new NotifyAdmins(ctx));
     executor.bind('notifyall', new NotifyAll(ctx));
     executor.bind('notifygroup', new NotifyGroup(ctx));
+    executor.bind('pstats', new ProcessStats(ctx));
     return executor;
 }
