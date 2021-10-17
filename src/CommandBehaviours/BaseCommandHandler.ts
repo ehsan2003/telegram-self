@@ -13,7 +13,7 @@ export abstract class BaseCommandHandler<ParsedArgs = any, ValidatedArguments = 
         console.log(parsedArgs);
         const modifiedMessageLike = this.modifyMessageLike(messageLike, parsedArgs);
         console.log(modifiedMessageLike, messageLike);
-        const validatedArgs = this.validateParsedArgs(parsedArgs as ParsedArgs & Arguments);
+        const validatedArgs = await this.validateParsedArgs(parsedArgs as ParsedArgs & Arguments);
         await this.execute(modifiedMessageLike, validatedArgs);
     }
 
@@ -53,5 +53,5 @@ export abstract class BaseCommandHandler<ParsedArgs = any, ValidatedArguments = 
 
     protected abstract getArgsParserOptions(): Options;
 
-    protected abstract validateParsedArgs(parsedArgs: ParsedArgs & Arguments): ValidatedArguments;
+    protected abstract validateParsedArgs(parsedArgs: ParsedArgs & Arguments): ValidatedArguments | Promise<ValidatedArguments>;
 }
