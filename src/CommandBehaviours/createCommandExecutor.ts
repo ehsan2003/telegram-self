@@ -11,6 +11,7 @@ import {ProcessStopper} from "./Commands/ProcessStopper/ProcessStopper";
 import {SpamStarter} from "./Commands/SpamStarter/SpamStarter";
 import {WatcherProcessStarter} from "./Commands/WhatcherProcessStarter/WatcherProcessStarter";
 import {MessageLike} from "./MessageLike";
+import {EventLoggerStarter} from "./Commands/EventLoggerStarter";
 
 export function createCommandExecutor(ctx: Context): CommandExecutor {
     const executor = new CommandExecutor(ctx);
@@ -25,7 +26,7 @@ export function createCommandExecutor(ctx: Context): CommandExecutor {
     executor.bind('pstop', new ProcessStopper(ctx));
     executor.bind('spam', new SpamStarter(ctx));
     executor.bind('watch', new WatcherProcessStarter(ctx));
-
+    executor.bind('log', new EventLoggerStarter(ctx));
     executor.bind('help', {
         handle: async (messageLike: MessageLike, args: string[]) => {
             await executor.showHelp(args[0]);
