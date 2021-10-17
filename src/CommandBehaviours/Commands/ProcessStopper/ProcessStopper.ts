@@ -6,7 +6,7 @@ import * as Joi from "joi";
 
 export type ProcessStopperArgs = { name: string; } | { id: string; };
 
-export class ProcessStopper extends BaseCommandHandler {
+export class ProcessStopper extends BaseCommandHandler<any, ProcessStopperArgs> {
     // async handle(): Promise<void> {
     //     if ('name' in this.args) {
     //         this.ctx.processManager.stopByName(this.args.name);

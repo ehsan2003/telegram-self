@@ -4,7 +4,7 @@ import {Context} from "../Context";
 import {Arguments, detailed, Options} from "yargs-parser";
 import {SelfError} from "../SelfError";
 
-export abstract class BaseCommandHandler<ParsedArgs = any, ValidatedArguments = any> implements ICommandHandler {
+export abstract class BaseCommandHandler<ParsedArgs, ValidatedArguments> implements ICommandHandler {
     constructor(protected ctx: Context) {
     }
 

@@ -10,7 +10,7 @@ export type WatcherProcessStarterArgs = {
     outputChat: string;
 }
 
-export class WatcherProcessStarter extends BaseCommandHandler {
+export class WatcherProcessStarter extends BaseCommandHandler<WatcherProcessStarter, WatcherProcessStarter> {
     protected async execute(message: MessageLike, validatedArgs: any): Promise<void> {
         const inputChat = await this.ctx.client.getPeerId(isNaN(+validatedArgs.inputChat) ? validatedArgs.inputChat : +validatedArgs.inputChat, false)
 
@@ -37,7 +37,7 @@ export class WatcherProcessStarter extends BaseCommandHandler {
         return "";
     }
 
-    protected validateParsedArgs(parsedArgs: any): any {
+    protected validateParsedArgs(parsedArgs: WatcherProcessStarter): WatcherProcessStarter {
         return validateJoi(Joi.object({
             inputChat: Joi.string().required(),
             outputChat: Joi.string().required(),

@@ -1,40 +1,53 @@
-import {SpamProcess, SpamProcessArgs} from "../../../Processes/SpamProcess";
-import {SelfError} from "../../../SelfError";
-import yargsParser, {Arguments} from "yargs-parser";
+import {SpamProcess} from "../../../Processes/SpamProcess";
+import yargsParser from "yargs-parser";
 import {BaseCommandHandler} from "../../BaseCommandHandler";
 import {MessageLike} from "../../MessageLike";
+import * as Joi from 'joi';
+import {validateJoi} from "../../../utils";
+import {SelfError} from "../../../SelfError";
 
-export type SpamStarterArgs = {
+export type ParsedSpamStarterArgs = {
     chatId: string;
     interval: number;
     textCategory: string;
     name: string;
-} & Arguments
+}
+export type SpamStarterArgs = {
+    chatId: number | string;
+    interval: number;
+    textCategory: string;
+    name: string;
+};
 
-export class SpamStarter extends BaseCommandHandler {
-    protected async validateParsedArgs(args: SpamStarterArgs) {
-        const chatId = isNaN(+args.chatId) ? args.chatId : +args.chatId;
-        if (!chatId) {
-            throw new SelfError('chatId is required');
-        }
-        const result: Partial<SpamProcessArgs> = {}
-        const chat = await this.ctx.client.getEntity(chatId).catch(() => null);
+export class SpamStarter extends BaseCommandHandler<Partial<ParsedSpamStarterArgs>, SpamStarterArgs> {
+    protected async validateParsedArgs(args: Partial<SpamStarterArgs>) {
+        return validateJoi(Joi.object({
+                chatId: Joi.alternatives(Joi.number(), Joi.string()).required(),
+                interval: Joi.number().default(500),
+                textCategory: Joi.string().required(),
+                name: Joi.string(),
+            }
+        ), args);
+    }
+
+    protected async execute(message: MessageLike, validatedArgs: SpamStarterArgs): Promise<void> {
+        let {chatId, textCategory} = await this.prepareArguments(validatedArgs);
+        const spamProcess = new SpamProcess(this.ctx, {...validatedArgs, chatId, textCategory});
+        this.ctx.processManager.run(spamProcess, validatedArgs.name);
+    }
+
+    private async prepareArguments(validatedArgs: SpamStarterArgs) {
+        const chat = await this.ctx.client.getEntity(validatedArgs.chatId).catch(() => null);
         if (!chat) {
             throw new SelfError('chat not found');
         }
-        result.chatId = chat.id;
-        const category = await this.ctx.prisma.preparedTextCategory.findUnique({where: {name: args.textCategory}});
+        const category = await this.ctx.prisma.preparedTextCategory.findUnique({where: {name: validatedArgs.textCategory}});
         if (!category) {
             throw new SelfError('text category not found');
         }
-        result.textCategory = category.name;
-        result.interval = args.interval;
-        return result as SpamProcessArgs;
-    }
 
-    protected async execute(message: MessageLike, validatedArgs: any): Promise<void> {
-        const spamProcess = new SpamProcess(this.ctx, validatedArgs);
-        this.ctx.processManager.run(spamProcess, validatedArgs.name);
+        let chatId = chat.id;
+        return {chatId, textCategory: category.name};
     }
 
     protected getArgsParserOptions(): yargsParser.Options {

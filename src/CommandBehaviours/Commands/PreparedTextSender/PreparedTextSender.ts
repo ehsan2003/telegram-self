@@ -1,5 +1,4 @@
 import {BaseCommandHandler} from "../../BaseCommandHandler";
-import {PreparedText} from '@prisma/client'
 import yargsParser from "yargs-parser";
 import {MessageLike} from "../../MessageLike";
 import {validateJoi} from "../../../utils";
@@ -10,7 +9,7 @@ export type PreparedTextSenderArgs = {
     textId: string;
 } | { textCategory: string; };
 
-export class PreparedTextSender extends BaseCommandHandler {
+export class PreparedTextSender extends BaseCommandHandler<any, PreparedTextSenderArgs> {
     protected async execute(message: MessageLike, validatedArgs: PreparedTextSenderArgs): Promise<void> {
         if (!message.messageId) {
             throw new SelfError('message id must exists');
