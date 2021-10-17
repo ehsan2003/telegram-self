@@ -10,20 +10,11 @@ import {PreparedTextSender} from "./Commands/PreparedTextSender/PreparedTextSend
 import {ProcessStopper} from "./Commands/ProcessStopper/ProcessStopper";
 import {SpamStarter} from "./Commands/SpamStarter/SpamStarter";
 import {WatcherProcessStarter} from "./Commands/WhatcherProcessStarter/WatcherProcessStarter";
+import {MessageLike} from "./MessageLike";
 
 export function createCommandExecutor(ctx: Context): CommandExecutor {
     const executor = new CommandExecutor(ctx);
-    // executor.bind('debugmsg', new DebugMessageFactory(ctx));
-    // executor.bind('spam', new SpamStarterFactory(ctx));
-    // executor.bind('pstats', {createHandler: (event) => new ProcessStats(ctx, event, {})});
-    // executor.bind('pstop', new ProcessStopperFactory(ctx));
-    // executor.bind('deleteme', new DeleteMeFactory(ctx));
-    // executor.bind('notifyall', new NotifyAllRepresentation(ctx))
-    // executor.bind('text', new PreparedTextSenderRepresentation(ctx));
-    // executor.bind('notifygroup', new NotifyGroupRepresentation(ctx));
-    // executor.bind('notifyadmins', new NotifyAdminsRepresentation(ctx));
-    // executor.bind('watch', new WatcherProcessStarterRepresentation(ctx));
-    // place factories here
+
     executor.bind('debugmsg', new DebugMessage(ctx));
     executor.bind('deleteme', new DeleteMe(ctx));
     executor.bind('notifyadmins', new NotifyAdmins(ctx));
@@ -34,5 +25,20 @@ export function createCommandExecutor(ctx: Context): CommandExecutor {
     executor.bind('pstop', new ProcessStopper(ctx));
     executor.bind('spam', new SpamStarter(ctx));
     executor.bind('watch', new WatcherProcessStarter(ctx));
+
+    executor.bind('help', {
+        handle: async (messageLike: MessageLike, args: string[]) => {
+            await executor.showHelp(args[0]);
+        },
+        getShortHelp(): string {
+            return '!help [command name]        shows help';
+        }, getHelp(): string {
+            return `!help [command name]        shows help 
+            
+    shows help for specific command.
+    if command not specified shows short help of all commands
+            `;
+        }
+    })
     return executor;
 }
