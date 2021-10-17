@@ -4,4 +4,6 @@ export interface ICommandHandler {
     handle(messageLike: MessageLike, args: string[]): Promise<void>;
 
     getShortHelp(): string;
+
+    getHelp(): string;
 }
