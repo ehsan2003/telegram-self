@@ -14,6 +14,9 @@ export type SpamStarterArgs = {
 export class SpamStarter extends BaseCommandHandler {
     protected async validateParsedArgs(args: SpamStarterArgs) {
         const chatId = isNaN(+args.chatId) ? args.chatId : +args.chatId;
+        if (!chatId) {
+            throw new SelfError('chatId is required');
+        }
         const result: Partial<SpamProcessArgs> = {}
         const chat = await this.ctx.client.getEntity(chatId).catch(() => null);
         if (!chat) {
