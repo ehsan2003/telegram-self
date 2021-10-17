@@ -39,3 +39,10 @@ model PreparedTextCategory {
   name String @unique
   texts PreparedText[]
 }
+
+model Log {
+  id String @id @default(cuid())
+  date DateTime @default(now())
+  type String
+  data String
+}
