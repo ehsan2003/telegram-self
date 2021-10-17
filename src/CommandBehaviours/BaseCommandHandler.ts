@@ -10,31 +10,10 @@ export abstract class BaseCommandHandler<ParsedArgs = any, ValidatedArguments = 
 
     async handle(messageLike: MessageLike, args: string[]): Promise<void> {
         const parsedArgs = this.parseArgs(args).argv;
-        console.log(parsedArgs);
-        const modifiedMessageLike = this.modifyMessageLike(messageLike, parsedArgs);
-        console.log(modifiedMessageLike, messageLike);
         const validatedArgs = await this.validateParsedArgs(parsedArgs as ParsedArgs & Arguments);
-        await this.execute(modifiedMessageLike, validatedArgs);
+        await this.execute(messageLike, validatedArgs);
     }
 
-    private modifyMessageLike(originalMessageLike: MessageLike, parsedArgs: any) {
-        const result = {...originalMessageLike};
-        if (parsedArgs.chatId) {
-            console.log(parsedArgs.chatId)
-            if (isNaN(+parsedArgs.chatId)) {
-                throw new SelfError('invalid chatId argument');
-            }
-            result.chatId = +parsedArgs.chatId
-            console.log(result.chatId)
-        }
-        if (parsedArgs.replyId) {
-            if (isNaN(+parsedArgs.replyId)) {
-                throw new SelfError('invalid replyId argument');
-            }
-            result.replyTo = +parsedArgs.replyId;
-        }
-        return result;
-    }
 
     private parseArgs(args: string[]) {
         const parserOptions = this.getArgsParserOptions();
