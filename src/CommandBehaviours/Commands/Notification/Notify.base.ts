@@ -1,10 +1,10 @@
 import {Api, utils} from "telegram";
 import {chunk} from "lodash";
 import {sleep} from "telegram/Helpers";
-import {BaseCommandHandler} from "../BaseCommandHandler";
-import {MessageLike} from "../MessageLike";
+import {BaseCommandHandler} from "../../BaseCommandHandler";
+import {MessageLike} from "../../MessageLike";
 import yargsParser from "yargs-parser";
-import {validateJoi} from "../../utils";
+import {validateJoi} from "../../../utils";
 import * as Joi from 'joi';
 
 export type NotifyBaseArgs = {

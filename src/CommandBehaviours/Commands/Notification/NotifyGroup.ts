@@ -1,4 +1,4 @@
-import {NotifyBase, NotifyBaseArgs} from "../Notify.base";
+import {NotifyBase, NotifyBaseArgs} from "./Notify.base";
 import {MessageLike} from "../../MessageLike";
 import {Api} from "telegram";
 import {validateJoi} from "../../../utils";

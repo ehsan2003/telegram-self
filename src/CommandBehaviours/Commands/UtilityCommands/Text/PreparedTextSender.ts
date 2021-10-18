@@ -1,9 +1,9 @@
-import {BaseCommandHandler} from "../../BaseCommandHandler";
+import {BaseCommandHandler} from "../../../BaseCommandHandler";
 import yargsParser from "yargs-parser";
-import {MessageLike} from "../../MessageLike";
-import {validateJoi} from "../../../utils";
+import {MessageLike} from "../../../MessageLike";
+import {validateJoi} from "../../../../utils";
 import * as Joi from "joi";
-import {SelfError} from "../../../SelfError";
+import {SelfError} from "../../../../SelfError";
 
 export type PreparedTextSenderArgs = {
     textId: string;

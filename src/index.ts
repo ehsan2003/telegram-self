@@ -9,7 +9,7 @@ import {NewMessage, NewMessageEvent} from "telegram/events";
 import {Subject} from "rxjs";
 import {ProcessManager} from "./Processes/ProcessManager";
 import parseArgsStringToArgv from "string-argv";
-import {bindCommandExecutors} from "./CommandBehaviours/bindCommandExecutors";
+import {bindCommandExecutors} from "./bindCommandExecutors";
 import {getMessageLikeFromNewMessageEvent, prepareLongMessage} from "./utils";
 import {CommandExecutorImpl} from "./CommandBehaviours/CommandExecutorImpl";
 
