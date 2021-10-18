@@ -5,3 +5,4 @@ telegram_session
 dist
 db.sqlite
 yarn-error.log
+/db.sqlite-journal
