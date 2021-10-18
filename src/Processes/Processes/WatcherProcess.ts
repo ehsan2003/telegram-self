@@ -21,12 +21,12 @@ export class WatcherProcess implements IProcess {
     private messagesSubject = new Subject<NewMessageEvent>();
     private eventCallback = (event: NewMessageEvent) => this.messagesSubject.next(event);
 
-    clear(): any {
+    clear() {
         this.clearSubject.next(null);
         this.ctx.client.removeEventHandler(this.eventCallback, undefined as any);
     }
 
-    async start(): Promise<any> {
+    start() {
         this.ctx.eventsSubject.pipe(
             takeUntil(this.clearSubject),
             filter((test): test is ForwardableUpdates => 'message' in test && typeof test.message !== 'string' && test.message.className === 'Message' && getPeerId(test.message.peerId) === this.args.chatId)

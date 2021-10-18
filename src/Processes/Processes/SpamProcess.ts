@@ -15,7 +15,7 @@ export class SpamProcess implements IProcess {
     constructor(protected ctx: Context, protected args: SpamProcessArgs) {
     }
 
-    start(): any {
+    start() {
         interval(this.args.interval).pipe(
             takeUntil(this.exitSubject),
             tap(async () => {
@@ -25,7 +25,7 @@ export class SpamProcess implements IProcess {
         });
     }
 
-    clear(): any {
+    clear() {
         this.exitSubject.next(null);
     }
 }
