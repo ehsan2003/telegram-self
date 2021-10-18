@@ -1,7 +1,7 @@
 import {ICommandHandler} from "../../ICommandHandler";
 import {MessageLike} from "../../MessageLike";
 import {Context} from "../../../Context";
-import {EventLoggerProcess} from "../../../Processes/EventLoggerProcess";
+import {EventLoggerProcess} from "../../../Processes/Processes/EventLoggerProcess";
 
 export class EventLoggerStarter implements ICommandHandler {
     getHelp(): string {

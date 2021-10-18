@@ -1,6 +1,6 @@
-import {IProcess} from "./IProcess";
+import {IProcess} from "../IProcess";
 import {interval, Subject, takeUntil, tap} from "rxjs";
-import {Context} from "../Context";
+import {Context} from "../../Context";
 
 
 export type SpamProcessArgs = {

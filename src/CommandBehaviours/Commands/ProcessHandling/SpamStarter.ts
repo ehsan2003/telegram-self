@@ -1,4 +1,4 @@
-import {SpamProcess} from "../../../Processes/SpamProcess";
+import {SpamProcess} from "../../../Processes/Processes/SpamProcess";
 import yargsParser from "yargs-parser";
 import {BaseCommandHandler} from "../../BaseCommandHandler";
 import {MessageLike} from "../../MessageLike";

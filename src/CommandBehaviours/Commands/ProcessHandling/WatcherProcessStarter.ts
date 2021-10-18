@@ -1,4 +1,4 @@
-import {WatcherProcess} from "../../../Processes/WatcherProcess";
+import {WatcherProcess} from "../../../Processes/Processes/WatcherProcess";
 import {BaseCommandHandler} from "../../BaseCommandHandler";
 import {MessageLike} from "../../MessageLike";
 import yargsParser from "yargs-parser";
