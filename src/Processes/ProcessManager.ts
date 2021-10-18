@@ -1,7 +1,7 @@
 import {IProcess} from "./IProcess";
 import {SelfError} from "../SelfError";
 import _ from 'lodash';
-import {table} from 'table';
+import {IProcessManager} from "./IProcessManager";
 
 export interface ProcessRepresentation {
     name?: string;
@@ -10,7 +10,7 @@ export interface ProcessRepresentation {
     startedAt: Date;
 }
 
-export class ProcessManager {
+export class ProcessManager implements IProcessManager {
     private processes: ProcessRepresentation[] = [];
 
     /**
@@ -31,7 +31,7 @@ export class ProcessManager {
         // return 1;
     }
 
-    public stopByName(name: string) {
+    stopByName(name: string) {
         const processId = this.getProcessRepresentationByName(name)?.id;
         if (!processId) {
             throw new SelfError('no such process');
@@ -58,11 +58,9 @@ export class ProcessManager {
         return this.processes.find(process => process.id === id);
     }
 
-    public getStats(): string {
-        if (!this.processes.length) {
-            return 'no running process';
-        }
-        const tableRows = [['id', 'name', 'date'], ...this.processes.map(processRepresentation => [processRepresentation.id, processRepresentation.name, processRepresentation.startedAt.toISOString()])];
-        return table(tableRows)
+    getProcesses(): ProcessRepresentation[] {
+        return this.processes;
     }
+
+
 }
