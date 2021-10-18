@@ -9,8 +9,9 @@ import {NewMessage, NewMessageEvent} from "telegram/events";
 import {Subject} from "rxjs";
 import {ProcessManager} from "./Processes/ProcessManager";
 import parseArgsStringToArgv from "string-argv";
-import {createCommandExecutor} from "./CommandBehaviours/createCommandExecutor";
-import {prepareLongMessage} from "./utils";
+import {bindCommandExecutors} from "./CommandBehaviours/bindCommandExecutors";
+import {getMessageLikeFromNewMessageEvent, prepareLongMessage} from "./utils";
+import {CommandExecutorImpl} from "./CommandBehaviours/CommandExecutorImpl";
 
 dotenv.config({debug: true});
 
@@ -28,13 +29,15 @@ async function createContext(): Promise<Context> {
     const eventsSubject = new Subject<Api.TypeUpdate>();
     client.addEventHandler((event: Api.TypeUpdate) => eventsSubject.next(event))
     const prisma = new PrismaClient();
+
     return {
         client: client,
         prisma: prisma,
         common: new Common(client, prisma),
         logger: new Logger("warn"),
         eventsSubject: eventsSubject,
-        processManager: new ProcessManager()
+        processManager: new ProcessManager(),
+        commandExecutor: new CommandExecutorImpl()
     };
 }
 
@@ -61,14 +64,14 @@ function extractCommandAndArguments(message: string): { name: string, args: stri
 
 async function main() {
     const ctx = await createContext();
-    const executor = createCommandExecutor(ctx);
+    bindCommandExecutors(ctx);
 
     ctx.logger.info('running');
     ctx.client.addEventHandler(async (event) => {
         const {args, name} = extractCommandAndArguments(event.message.message!);
         ctx.logger.info(`event "${name}" happened with args :${JSON.stringify(args)}`);
         try {
-            await executor.executeCommand(event, name, args);
+            await ctx.commandExecutor.executeCommand(getMessageLikeFromNewMessageEvent(event), name, args);
         } catch (e) {
             await handleError(e, event, ctx);
         }

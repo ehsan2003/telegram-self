@@ -3,6 +3,7 @@ import {Api, Logger, TelegramClient} from "telegram";
 import {PrismaClient} from "@prisma/client";
 import {Subject} from "rxjs";
 import {ProcessManager} from "./Processes/ProcessManager";
+import {ICommandExecutor} from "./CommandBehaviours/ICommandExecutor";
 
 export interface Context {
     client: TelegramClient;
@@ -10,5 +11,6 @@ export interface Context {
     common: Common;
     logger: Logger;
     eventsSubject: Subject<Api.TypeUpdate>
-    processManager: ProcessManager
+    processManager: ProcessManager;
+    commandExecutor: ICommandExecutor;
 }
