@@ -10,6 +10,7 @@ import {ProcessStopper} from "./Commands/ProcessStopper/ProcessStopper";
 import {SpamStarter} from "./Commands/SpamStarter/SpamStarter";
 import {WatcherProcessStarter} from "./Commands/WhatcherProcessStarter/WatcherProcessStarter";
 import {EventLoggerStarter} from "./Commands/EventLoggerStarter";
+import {Help} from "./Commands/Help/Help";
 
 export function bindCommandExecutors(ctx: Context) {
 
@@ -26,5 +27,6 @@ export function bindCommandExecutors(ctx: Context) {
     executor.bind('spam', new SpamStarter(ctx));
     executor.bind('watch', new WatcherProcessStarter(ctx));
     executor.bind('log', new EventLoggerStarter(ctx));
+    executor.bind('help', new Help(ctx));
 
 }
