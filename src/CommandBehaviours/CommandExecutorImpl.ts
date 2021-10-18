@@ -11,11 +11,16 @@ export class CommandExecutorImpl implements ICommandExecutor {
     }
 
     async executeCommand(message: MessageLike, name: string, args: string[]) {
+        const handler = this.getHandlerByName(name);
+        await handler.handle(message, args);
+    }
+
+    public getHandlerByName(name: string): ICommandHandler {
         const handler = this.commands.get(name);
         if (!handler) {
             throw new SelfError('command not found');
         }
-        await handler.handle(message, args);
+        return handler;
     }
 
     getHandlers(): [string, ICommandHandler][] {

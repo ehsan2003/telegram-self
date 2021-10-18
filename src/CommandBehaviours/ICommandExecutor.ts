@@ -7,4 +7,6 @@ export interface ICommandExecutor {
     executeCommand(message: MessageLike, name: string, args: string[]): Promise<void>;
 
     getHandlers(): [string, ICommandHandler][];
+
+    getHandlerByName(name: string): ICommandHandler;
 }
