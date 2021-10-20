@@ -11,6 +11,7 @@ import {SpamStarter} from "./CommandBehaviours/Commands/ProcessHandling/SpamStar
 import {WatcherProcessStarter} from "./CommandBehaviours/Commands/ProcessHandling/WatcherProcessStarter";
 import {EventLoggerStarter} from "./CommandBehaviours/Commands/ProcessHandling/EventLoggerStarter";
 import {Help} from "./CommandBehaviours/Commands/UtilityCommands/Help";
+import {PreparedTextSetter} from "./CommandBehaviours/Commands/UtilityCommands/Text/PreparedTextSetter";
 
 export function bindCommandExecutors(ctx: Context) {
 
@@ -28,5 +29,6 @@ export function bindCommandExecutors(ctx: Context) {
     executor.bind('watch', new WatcherProcessStarter(ctx));
     executor.bind('log', new EventLoggerStarter(ctx));
     executor.bind('help', new Help(ctx));
+    executor.bind('textset', new PreparedTextSetter(ctx));
 
 }
