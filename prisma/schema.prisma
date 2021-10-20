@@ -20,6 +20,7 @@ model shekar {
 model PreparedText{
   id String @id @default(cuid())
   text String
+  entitiesJson String @default("[]")
   identifier String @unique
   tags PreparedTextCategory[]
 }
