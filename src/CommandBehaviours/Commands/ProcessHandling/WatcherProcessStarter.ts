@@ -1,7 +1,7 @@
 import {WatcherProcess} from "../../../Processes/Processes/WatcherProcess";
 import {BaseCommandHandler} from "../../BaseCommandHandler";
 import {MessageLike} from "../../MessageLike";
-import yargsParser from "yargs-parser";
+import yargsParser, {Arguments} from "yargs-parser";
 import {validateJoi} from "../../../utils";
 import * as Joi from "joi";
 
@@ -10,7 +10,7 @@ export type WatcherProcessStarterArgs = {
     outputChat: string;
 }
 
-export class WatcherProcessStarter extends BaseCommandHandler<WatcherProcessStarter, WatcherProcessStarter> {
+export class WatcherProcessStarter extends BaseCommandHandler<WatcherProcessStarterArgs> {
     protected async execute(message: MessageLike, validatedArgs: any): Promise<void> {
         const inputChat = await this.ctx.client.getPeerId(isNaN(+validatedArgs.inputChat) ? validatedArgs.inputChat : +validatedArgs.inputChat, false)
 
@@ -37,7 +37,7 @@ export class WatcherProcessStarter extends BaseCommandHandler<WatcherProcessStar
         return "";
     }
 
-    protected validateParsedArgs(parsedArgs: WatcherProcessStarter): WatcherProcessStarter {
+    protected validateParsedArgs(parsedArgs: Arguments): WatcherProcessStarterArgs {
         return validateJoi(Joi.object({
             inputChat: Joi.string().required(),
             outputChat: Joi.string().required(),

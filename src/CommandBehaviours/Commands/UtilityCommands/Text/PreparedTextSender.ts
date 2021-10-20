@@ -1,5 +1,5 @@
 import {BaseCommandHandler} from "../../../BaseCommandHandler";
-import yargsParser from "yargs-parser";
+import yargsParser, {Arguments} from "yargs-parser";
 import {MessageLike} from "../../../MessageLike";
 import {validateJoi} from "../../../../utils";
 import * as Joi from "joi";
@@ -9,7 +9,7 @@ export type PreparedTextSenderArgs = {
     textId: string;
 } | { textCategory: string; };
 
-export class PreparedTextSender extends BaseCommandHandler<any, PreparedTextSenderArgs> {
+export class PreparedTextSender extends BaseCommandHandler<PreparedTextSenderArgs> {
     protected async execute(message: MessageLike, validatedArgs: PreparedTextSenderArgs): Promise<void> {
         if (!message.messageId) {
             throw new SelfError('message id must exists');
@@ -46,7 +46,7 @@ export class PreparedTextSender extends BaseCommandHandler<any, PreparedTextSend
         return "";
     }
 
-    protected validateParsedArgs(parsedArgs: any): any {
+    protected validateParsedArgs(parsedArgs: Arguments): PreparedTextSenderArgs {
         return validateJoi(Joi.object({
             textId: Joi.string(),
             textCategory: Joi.string()

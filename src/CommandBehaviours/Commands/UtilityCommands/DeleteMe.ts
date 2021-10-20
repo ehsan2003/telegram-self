@@ -1,13 +1,13 @@
 import {utils} from "telegram";
 import {BaseCommandHandler} from "../../BaseCommandHandler";
-import yargsParser from "yargs-parser";
+import yargsParser, {Arguments} from "yargs-parser";
 import {MessageLike} from "../../MessageLike";
 import {validateJoi} from "../../../utils";
 import * as Joi from 'joi';
 
 type DeleteMeArgs = { countToDelete: number }
 
-export class DeleteMe extends BaseCommandHandler<Partial<DeleteMeArgs>, DeleteMeArgs> {
+export class DeleteMe extends BaseCommandHandler<DeleteMeArgs> {
     async execute(message: MessageLike, validatedArgs: DeleteMeArgs): Promise<void> {
         const messages = await this.ctx.client.getMessages(message.chatId, {
             limit: validatedArgs.countToDelete,
@@ -30,7 +30,7 @@ export class DeleteMe extends BaseCommandHandler<Partial<DeleteMeArgs>, DeleteMe
         return "";
     }
 
-    protected validateParsedArgs(parsedArgs: Partial<DeleteMeArgs>): DeleteMeArgs {
+    protected validateParsedArgs(parsedArgs: Arguments): DeleteMeArgs {
         return validateJoi(Joi.object({
             countToDelete: Joi.number().default(1000),
         }), parsedArgs)

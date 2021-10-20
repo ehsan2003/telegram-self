@@ -3,7 +3,7 @@ import {MessageLike} from "../../MessageLike";
 import {Api} from "telegram";
 
 
-export class NotifyAll extends NotifyBase<any, any> {
+export class NotifyAll extends NotifyBase<any> {
     getHelp(): string {
         return "";
     }

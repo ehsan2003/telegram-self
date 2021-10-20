@@ -1,12 +1,12 @@
 import {BaseCommandHandler} from "../../BaseCommandHandler";
 import {MessageLike} from "../../MessageLike";
-import yargsParser from "yargs-parser";
+import yargsParser, {Arguments} from "yargs-parser";
 import {validateJoi} from "../../../utils";
 import * as Joi from "joi";
 
 export type ProcessStopperArgs = { name: string; } | { id: string; };
 
-export class ProcessStopper extends BaseCommandHandler<any, ProcessStopperArgs> {
+export class ProcessStopper extends BaseCommandHandler<ProcessStopperArgs> {
     // async handle(): Promise<void> {
     //     if ('name' in this.args) {
     //         this.ctx.processManager.stopByName(this.args.name);
@@ -36,7 +36,7 @@ export class ProcessStopper extends BaseCommandHandler<any, ProcessStopperArgs> 
         return "";
     }
 
-    protected validateParsedArgs(parsedArgs: ProcessStopperArgs): ProcessStopperArgs {
+    protected validateParsedArgs(parsedArgs: Arguments): ProcessStopperArgs {
         return validateJoi(Joi.object({id: Joi.number().integer(), name: Joi.string()}).xor('id', 'name'), parsedArgs)
     }
 }

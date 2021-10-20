@@ -1,17 +1,11 @@
 import {SpamProcess} from "../../../Processes/Processes/SpamProcess";
-import yargsParser from "yargs-parser";
+import yargsParser, {Arguments} from "yargs-parser";
 import {BaseCommandHandler} from "../../BaseCommandHandler";
 import {MessageLike} from "../../MessageLike";
 import * as Joi from 'joi';
 import {validateJoi} from "../../../utils";
 import {SelfError} from "../../../SelfError";
 
-export type ParsedSpamStarterArgs = {
-    chatId: string;
-    interval: number;
-    textCategory: string;
-    name: string;
-}
 export type SpamStarterArgs = {
     chatId: number | string;
     interval: number;
@@ -19,8 +13,8 @@ export type SpamStarterArgs = {
     name: string;
 };
 
-export class SpamStarter extends BaseCommandHandler<Partial<ParsedSpamStarterArgs>, SpamStarterArgs> {
-    protected async validateParsedArgs(args: Partial<SpamStarterArgs>) {
+export class SpamStarter extends BaseCommandHandler<SpamStarterArgs> {
+    protected async validateParsedArgs(args: Arguments) {
         return validateJoi(Joi.object({
                 chatId: Joi.alternatives(Joi.number(), Joi.string()).required(),
                 interval: Joi.number().default(500),

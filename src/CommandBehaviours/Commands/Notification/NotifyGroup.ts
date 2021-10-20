@@ -3,14 +3,14 @@ import {MessageLike} from "../../MessageLike";
 import {Api} from "telegram";
 import {validateJoi} from "../../../utils";
 import * as Joi from "joi";
-import yargsParser from "yargs-parser";
+import yargsParser, {Arguments} from "yargs-parser";
 import {SelfError} from "../../../SelfError";
 import {intersectionBy} from "lodash";
 
 
 export type NotifyGroupArgs = { groupName: string; } & NotifyBaseArgs;
 
-export class NotifyGroup extends NotifyBase<NotifyGroupArgs, NotifyGroupArgs> {
+export class NotifyGroup extends NotifyBase<NotifyGroupArgs> {
     getHelp(): string {
         return "";
     }
@@ -19,7 +19,7 @@ export class NotifyGroup extends NotifyBase<NotifyGroupArgs, NotifyGroupArgs> {
         return "";
     }
 
-    protected validateParsedArgs(parsedArgs: NotifyGroupArgs): NotifyGroupArgs {
+    protected validateParsedArgs(parsedArgs: Arguments): NotifyGroupArgs {
         return validateJoi(Joi.object({
             groupName: Joi.string().required(),
             countPerMessage: Joi.number().min(2).default(5),

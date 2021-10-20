@@ -2,14 +2,14 @@ import {SelfError} from "../../../SelfError";
 import {stringify} from 'yaml';
 import {getCircularReplacer, prepareLongMessage} from "../../../utils";
 import {BaseCommandHandler} from "../../BaseCommandHandler";
-import yargsParser from "yargs-parser";
+import yargsParser, {Arguments} from "yargs-parser";
 import {MessageLike} from "../../MessageLike";
 
 export type DebugMessageArgs = {
     chat: boolean;
 }
 
-export class DebugMessage extends BaseCommandHandler<DebugMessageArgs, DebugMessageArgs> {
+export class DebugMessage extends BaseCommandHandler<DebugMessageArgs> {
 
 
     private stringify(reply: any) {
@@ -36,8 +36,8 @@ export class DebugMessage extends BaseCommandHandler<DebugMessageArgs, DebugMess
         return "";
     }
 
-    protected validateParsedArgs(parsedArgs: DebugMessageArgs): DebugMessageArgs {
-        return parsedArgs;
+    protected validateParsedArgs(parsedArgs: Arguments): DebugMessageArgs {
+        return {chat: parsedArgs.chat};
     }
 
 }

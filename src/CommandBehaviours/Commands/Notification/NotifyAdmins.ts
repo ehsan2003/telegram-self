@@ -2,7 +2,7 @@ import {NotifyBase, NotifyBaseArgs} from "./Notify.base";
 import {Api} from "telegram";
 import {MessageLike} from "../../MessageLike";
 
-export class NotifyAdmins extends NotifyBase<any, any> {
+export class NotifyAdmins extends NotifyBase<any> {
     getAdmins(groupId: number) {
         return this.ctx.client.getParticipants(groupId, {filter: new Api.ChannelParticipantsAdmins()});
     }
