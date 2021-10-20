@@ -1,7 +1,7 @@
 import {BaseCommandHandler} from "../../../BaseCommandHandler";
 import yargsParser, {Arguments} from "yargs-parser";
 import {MessageLike} from "../../../MessageLike";
-import {validateJoi} from "../../../../utils";
+import {getFormattingEntitiesFromRawJson, validateJoi} from "../../../../utils";
 import * as Joi from "joi";
 import {SelfError} from "../../../../SelfError";
 
@@ -14,8 +14,13 @@ export class PreparedTextSender extends BaseCommandHandler<PreparedTextSenderArg
         if (!message.messageId) {
             throw new SelfError('message id must exists');
         }
-        let text = await this.preparedText(validatedArgs);
-        await this.ctx.client.editMessage(message.chatId, {text: text.text, message: message.messageId});
+        const text = await this.preparedText(validatedArgs);
+
+        await this.ctx.client.editMessage(message.chatId, {
+            text: text.text,
+            formattingEntities: getFormattingEntitiesFromRawJson(JSON.parse(text.entitiesJson)),
+            message: message.messageId
+        });
     }
 
     private async preparedText(validatedArgs: PreparedTextSenderArgs) {
@@ -58,3 +63,4 @@ export class PreparedTextSender extends BaseCommandHandler<PreparedTextSenderArg
     // }
 
 }
+

@@ -58,3 +58,28 @@ export function getMessageLikeFromNewMessageEvent(event: NewMessageEvent): Messa
         messageId: event.message.id
     }
 }
+
+export function getFormattingEntitiesFromRawJson(raw: Omit<Api.TypeMessageEntity, 'getBytes'>[]): Api.TypeMessageEntity[] {
+    const entityConstructorMap = {
+        'MessageEntityUnknown': Api.MessageEntityUnknown,
+        'MessageEntityMention': Api.MessageEntityMention,
+        'MessageEntityHashtag': Api.MessageEntityHashtag,
+        'MessageEntityBotCommand': Api.MessageEntityBotCommand,
+        'MessageEntityUrl': Api.MessageEntityUrl,
+        'MessageEntityEmail': Api.MessageEntityEmail,
+        'MessageEntityBold': Api.MessageEntityBold,
+        'MessageEntityItalic': Api.MessageEntityItalic,
+        'MessageEntityCode': Api.MessageEntityCode,
+        'MessageEntityPre': Api.MessageEntityPre,
+        'MessageEntityTextUrl': Api.MessageEntityTextUrl,
+        'MessageEntityMentionName': Api.MessageEntityMentionName,
+        'InputMessageEntityMentionName': Api.InputMessageEntityMentionName,
+        'MessageEntityPhone': Api.MessageEntityPhone,
+        'MessageEntityCashtag': Api.MessageEntityCashtag,
+        'MessageEntityUnderline': Api.MessageEntityUnderline,
+        'MessageEntityStrike': Api.MessageEntityStrike,
+        'MessageEntityBlockquote': Api.MessageEntityBlockquote,
+        'MessageEntityBankCard': Api.MessageEntityBankCard,
+    }
+    return raw.map(e => new entityConstructorMap[e.className](e as any))
+}
