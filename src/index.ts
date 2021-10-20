@@ -15,17 +15,25 @@ import {CommandExecutorImpl} from "./CommandBehaviours/CommandExecutorImpl";
 
 dotenv.config({debug: true});
 
-if (!process.env.API_ID || isNaN(+process.env.API_ID)) {
-    console.error("API_ID is not set in environment");
-    process.exit(1);
-}
-if (!process.env.API_HASH) {
-    console.error("API_HASH is not set in environment");
-    process.exit(1);
+function validateEnvironmentVariablesOrExit() {
+    if (!process.env.API_ID || isNaN(+process.env.API_ID)) {
+        console.error("API_ID is not set in environment");
+        process.exit(1);
+    }
+    if (!process.env.API_HASH) {
+        console.error("API_HASH is not set in environment");
+        process.exit(1);
+    }
+    if (!process.env.SESSION_STR) {
+        console.error('SESSION_STR is not set in environment ( use npx tgsession to generate the session )');
+    }
 }
 
+validateEnvironmentVariablesOrExit();
+
 async function createContext(): Promise<Context> {
-    const client = await initializeClient();
+    const logger = new Logger();
+    const client = await initializeClient(logger);
     const eventsSubject = new Subject<Api.TypeUpdate>();
     client.addEventHandler((event: Api.TypeUpdate) => eventsSubject.next(event))
     const prisma = new PrismaClient();
@@ -34,7 +42,7 @@ async function createContext(): Promise<Context> {
         client: client,
         prisma: prisma,
         common: new Common(client, prisma),
-        logger: new Logger("warn"),
+        logger: logger,
         eventsSubject: eventsSubject,
         processManager: new ProcessManager(),
         commandExecutor: new CommandExecutorImpl()
@@ -63,6 +71,7 @@ function extractCommandAndArguments(message: string): { name: string, args: stri
 }
 
 async function main() {
+    validateEnvironmentVariablesOrExit()
     const ctx = await createContext();
     bindCommandExecutors(ctx);
 

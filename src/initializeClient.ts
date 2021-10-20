@@ -1,42 +1,16 @@
-import {TelegramClient} from "telegram";
-import {StoreSession} from "telegram/sessions";
-import prompts from "prompts";
+import {Logger, TelegramClient} from "telegram";
+import {StringSession} from "telegram/sessions";
 
 
-export async function initializeClient(): Promise<TelegramClient> {
-    const session = new StoreSession("telegram_session");
+export async function initializeClient(logger: Logger): Promise<TelegramClient> {
+    const session = new StringSession(process.env.SESSION_STR as string);
     const client = new TelegramClient(
         session,
         +process.env.API_ID!,
         process.env.API_HASH!,
-        {
-            // proxy: {
-            //     ip: "127.0.0.1",
-            //     port: 9050,
-            //     socksType:5,
-            //     timeout: 30,
-            // },
-            useWSS: false,
-        }
+        {baseLogger: logger}
     );
-    await client.start({
-        password: () => prompts({
-            name: "value",
-            type: "password",
-            message: "password",
-        }).then((result) => result.value),
-        onError: (err) => console.error("error", err),
-        phoneNumber: () => prompts({
-            name: "value",
-            type: "text",
-            message: "phone",
-        }).then((result) => result.value),
-        phoneCode: () => prompts({
-            name: "value",
-            type: "text",
-            message: "code",
-        }).then((result) => result.value),
-    });
+    await client.connect();
 
     return client;
 }
