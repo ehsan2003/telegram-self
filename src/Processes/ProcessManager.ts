@@ -13,11 +13,7 @@ export interface ProcessRepresentation {
 export class ProcessManager implements IProcessManager {
     private processes: ProcessRepresentation[] = [];
 
-    /**
-     * starts a process and returns it's processId
-     * @param process
-     * @param name
-     */
+
     run(process: IProcess, name?: string) {
         if (name && this.getProcessRepresentationByName(name)) throw new SelfError(`duplicate name ${name}`);
 
