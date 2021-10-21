@@ -4,8 +4,6 @@ import {Api} from "telegram";
 import {validateJoi} from "../../../utils";
 import * as Joi from "joi";
 import yargsParser, {Arguments} from "yargs-parser";
-import {SelfError} from "../../../SelfError";
-import {intersectionBy} from "lodash";
 
 
 export type NotifyGroupArgs = { groupName: string; } & NotifyBaseArgs;
@@ -40,13 +38,7 @@ export class NotifyGroup extends NotifyBase<NotifyGroupArgs> {
     }
 
     async getUsersForMention(message: MessageLike, args: NotifyGroupArgs): Promise<Api.User[]> {
-        const group = await this.ctx.prisma.userGroup.findUnique({where: {name: args.groupName}});
-        if (!group) {
-            throw new SelfError('group does not exists');
-        }
-        const groupMembers = await this.ctx.prisma.userGroupMember.findMany({where: {groupId: group.id}})
-        const participants = await this.ctx.client.getParticipants(message.chatId, {});
-        return intersectionBy(participants, groupMembers, (v) => 'userId' in v ? v.userId : v.id);
+        return this.ctx.common.getUserGroupMembersInChat(message.chatId, args.groupName);
     }
 
 }

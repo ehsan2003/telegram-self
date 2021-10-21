@@ -1,8 +1,9 @@
 import {TelegramClient} from "telegram";
 import {PreparedText, PrismaClient} from '@prisma/client'
-import _ from "lodash";
+import _, {intersectionBy} from "lodash";
 import {SelfError} from "./SelfError";
 import {prepareLongMessage} from "./utils";
+import {EntityLike} from "telegram/define";
 
 export class Common {
     constructor(protected client: TelegramClient, protected prisma: PrismaClient) {
@@ -26,5 +27,15 @@ export class Common {
 
     public async tellUser(msg: string) {
         await this.client.sendMessage('me', prepareLongMessage(msg));
+    }
+
+    public async getUserGroupMembersInChat(chat: EntityLike, groupName: string) {
+        const group = await this.prisma.userGroup.findUnique({where: {name: groupName}});
+        if (!group) {
+            throw new SelfError('group does not exists');
+        }
+        const groupMembers = await this.prisma.userGroupMember.findMany({where: {groupId: group.id}})
+        const participants = await this.client.getParticipants(chat, {});
+        return intersectionBy(participants, groupMembers, (v) => 'userId' in v ? v.userId : v.id);
     }
 }
