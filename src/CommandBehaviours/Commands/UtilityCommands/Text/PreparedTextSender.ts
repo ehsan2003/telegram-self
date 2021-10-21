@@ -52,6 +52,9 @@ export class PreparedTextSender extends BaseCommandHandler<PreparedTextSenderArg
     }
 
     protected validateParsedArgs(parsedArgs: Arguments): PreparedTextSenderArgs {
+        if (parsedArgs._[0]) {
+            return {textId: parsedArgs._[0]};
+        }
         return validateJoi(Joi.object({
             textId: Joi.string(),
             textCategory: Joi.string()
