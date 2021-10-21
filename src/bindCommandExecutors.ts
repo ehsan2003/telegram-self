@@ -12,6 +12,7 @@ import {WatcherProcessStarter} from "./CommandBehaviours/Commands/ProcessHandlin
 import {EventLoggerStarter} from "./CommandBehaviours/Commands/ProcessHandling/EventLoggerStarter";
 import {Help} from "./CommandBehaviours/Commands/UtilityCommands/Help";
 import {PreparedTextSetter} from "./CommandBehaviours/Commands/UtilityCommands/Text/PreparedTextSetter";
+import {PreparedTextList} from "./CommandBehaviours/Commands/UtilityCommands/Text/PreparedTextList";
 
 export function bindCommandExecutors(ctx: Context) {
 
@@ -30,5 +31,6 @@ export function bindCommandExecutors(ctx: Context) {
     executor.bind('log', new EventLoggerStarter(ctx));
     executor.bind('help', new Help(ctx));
     executor.bind('textset', new PreparedTextSetter(ctx));
+    executor.bind('textls', new PreparedTextList(ctx));
 
 }
