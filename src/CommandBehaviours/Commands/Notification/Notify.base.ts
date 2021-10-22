@@ -41,9 +41,9 @@ export abstract class NotifyBase<Validated extends NotifyBaseArgs> extends BaseC
     protected async notifyUsers(participants: Api.User[], message: MessageLike, args: Validated) {
         const chunks = chunk(participants, args.countPerMessage)
         for (const chunk of chunks) {
-            await this.ctx.client.sendMessage(message.chatId, {
+            await this.ctx.client.sendMessage(message.getChatId(), {
                 message: this.getMessageForChunk(chunk),
-                replyTo: message.replyTo,
+                replyTo: message.getReplyToId(),
                 parseMode: 'html'
             })
             await sleep(args.delayBetweenMessages);

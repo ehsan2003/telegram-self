@@ -19,7 +19,7 @@ export class GroupMemberList implements ICommandHandler {
         if (!groupName) {
             throw new SelfError('you must specify a group name');
         }
-        const users = await this.ctx.common.getUserGroupMembersInChat(messageLike.chatId, groupName);
+        const users = await this.ctx.common.getUserGroupMembersInChat(messageLike.getChatId(), groupName);
         if (!users.length) {
             throw new SelfError(`no users found in this chat that belongs to ${groupName}`);
         }

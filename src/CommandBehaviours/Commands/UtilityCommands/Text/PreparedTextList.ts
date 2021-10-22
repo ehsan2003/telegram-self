@@ -13,7 +13,7 @@ export class PreparedTextList implements ICommandHandler {
         return "";
     }
 
-    async handle(messageLike: MessageLike, args: string[]): Promise<void> {
+    async handle(_: MessageLike, args: string[]): Promise<void> {
         const texts = await this.ctx.prisma.preparedText.findMany({include: {tags: true}});
         const table = this.generateText(texts);
         await this.ctx.common.tellUser(table);

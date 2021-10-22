@@ -17,11 +17,11 @@ export class DebugMessage extends BaseCommandHandler<DebugMessageArgs> {
     }
 
     protected async execute(message: MessageLike, parsedArgs: DebugMessageArgs): Promise<void> {
-        const reply = await this.ctx.client.getMessages(message.chatId, {ids: message.replyTo}).then(e => e[0]);
+        const reply = await message.getReplyTo();
         if (!reply) {
             throw new SelfError('no reply for debug message');
         }
-        await this.ctx.client.sendMessage(parsedArgs.chat ? message.chatId! : 'me', prepareLongMessage(this.stringify(reply)));
+        await this.ctx.client.sendMessage(parsedArgs.chat ? message.getChatId()! : 'me', prepareLongMessage(this.stringify(reply)));
     }
 
     protected getArgsParserOptions(): yargsParser.Options {

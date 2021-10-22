@@ -16,6 +16,6 @@ export class NotifyAdmins extends NotifyBase<any> {
     }
 
     getUsersForMention(message: MessageLike, args: NotifyBaseArgs): Promise<Api.User[]> {
-        return this.getAdmins(message.chatId);
+        return this.getAdmins(message.getChatId());
     }
 }

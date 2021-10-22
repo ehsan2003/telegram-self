@@ -7,10 +7,11 @@ type PreparedTextSetterArgs = { name: string };
 
 export class PreparedTextSetter extends BaseCommandHandler<PreparedTextSetterArgs> {
     protected async execute(message: MessageLike, validatedArgs: PreparedTextSetterArgs): Promise<void> {
-        if (!message.replyTo) {
-            throw new SelfError('message must have a reply');
-        }
-        const replyMessage = (await this.ctx.client.getMessages(message.chatId, {ids: message.replyTo}))[0];
+        // if (!message.replyTo) {
+        //     throw new SelfError('message must have a reply');
+        // }
+        // const replyMessage = (await this.ctx.client.getMessages(message.chatId, {ids: message.replyTo}))[0];
+        const replyMessage = await message.getReplyTo();
         if (!replyMessage) {
             throw new SelfError('message must have a reply');
         }
@@ -19,11 +20,11 @@ export class PreparedTextSetter extends BaseCommandHandler<PreparedTextSetterArg
                 identifier: validatedArgs.name,
             },
             create: {
-                text: replyMessage.text,
+                text: replyMessage.message,
                 entitiesJson: JSON.stringify(replyMessage.entities),
                 identifier: validatedArgs.name
             }, update: {
-                text: replyMessage.text,
+                text: replyMessage.message,
                 entitiesJson: JSON.stringify(replyMessage.entities),
             }
         })

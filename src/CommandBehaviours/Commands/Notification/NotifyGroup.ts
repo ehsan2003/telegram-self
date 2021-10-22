@@ -38,7 +38,7 @@ export class NotifyGroup extends NotifyBase<NotifyGroupArgs> {
     }
 
     async getUsersForMention(message: MessageLike, args: NotifyGroupArgs): Promise<Api.User[]> {
-        return this.ctx.common.getUserGroupMembersInChat(message.chatId, args.groupName);
+        return this.ctx.common.getUserGroupMembersInChat(message.getChatId(), args.groupName);
     }
 
 }

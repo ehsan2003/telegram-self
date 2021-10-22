@@ -9,12 +9,12 @@ type DeleteMeArgs = { countToDelete: number }
 
 export class DeleteMe extends BaseCommandHandler<DeleteMeArgs> {
     async execute(message: MessageLike, validatedArgs: DeleteMeArgs): Promise<void> {
-        const messages = await this.ctx.client.getMessages(message.chatId, {
+        const messages = await this.ctx.client.getMessages(message.getChatId(), {
             limit: validatedArgs.countToDelete,
             fromUser: 'me',
         });
-        await this.ctx.client.deleteMessages(message.chatId, messages.map(m => m.id), {});
-        const chat = await this.ctx.client.getEntity(message.chatId);
+        await this.ctx.client.deleteMessages(message.getChatId(), messages.map(m => m.id), {});
+        const chat = await this.ctx.client.getEntity(message.getChatId());
         await this.ctx.common.tellUser(`deleted ${messages.length} messages from "${utils.getDisplayName(chat)}"`)
     }
 

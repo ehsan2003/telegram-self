@@ -11,16 +11,8 @@ export type PreparedTextSenderArgs = {
 
 export class PreparedTextSender extends BaseCommandHandler<PreparedTextSenderArgs> {
     protected async execute(message: MessageLike, validatedArgs: PreparedTextSenderArgs): Promise<void> {
-        if (!message.messageId) {
-            throw new SelfError('message id must exists');
-        }
         const text = await this.preparedText(validatedArgs);
-
-        await this.ctx.client.editMessage(message.chatId, {
-            text: text.text,
-            formattingEntities: getFormattingEntitiesFromRawJson(JSON.parse(text.entitiesJson)),
-            message: message.messageId
-        });
+        await message.edit(text.text, getFormattingEntitiesFromRawJson(JSON.parse(text.entitiesJson)));
     }
 
     private async preparedText(validatedArgs: PreparedTextSenderArgs) {

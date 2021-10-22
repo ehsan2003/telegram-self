@@ -10,8 +10,9 @@ import {Subject} from "rxjs";
 import {ProcessManager} from "./Processes/ProcessManager";
 import parseArgsStringToArgv from "string-argv";
 import {bindCommandExecutors} from "./bindCommandExecutors";
-import {getMessageLikeFromNewMessageEvent, prepareLongMessage} from "./utils";
+import {prepareLongMessage} from "./utils";
 import {CommandExecutorImpl} from "./CommandBehaviours/CommandExecutorImpl";
+import {RealMessageLike} from "./RealMessageLike";
 
 dotenv.config({debug: true});
 
@@ -80,7 +81,7 @@ async function main() {
         const {args, name} = extractCommandAndArguments(event.message.message!);
         ctx.logger.info(`event "${name}" happened with args :${JSON.stringify(args)}`);
         try {
-            await ctx.commandExecutor.executeCommand(getMessageLikeFromNewMessageEvent(event), name, args);
+            await ctx.commandExecutor.executeCommand(new RealMessageLike(ctx, event.message), name, args);
         } catch (e) {
             await handleError(e, event, ctx);
         }
