@@ -16,6 +16,7 @@ import {PreparedTextList} from "./CommandBehaviours/Commands/UtilityCommands/Tex
 import {AddGroup} from "./CommandBehaviours/Commands/UserGroups/AddGroup";
 import {GroupsList} from "./CommandBehaviours/Commands/UserGroups/GroupsList";
 import {GroupMemberList} from "./CommandBehaviours/Commands/UserGroups/GroupMemberList";
+import {DebugUser} from "./CommandBehaviours/Commands/UtilityCommands/DebugUser";
 
 export function bindCommandExecutors(ctx: Context) {
 
@@ -38,4 +39,5 @@ export function bindCommandExecutors(ctx: Context) {
     executor.bind('gpadd', new AddGroup(ctx));
     executor.bind('gpls', new GroupsList(ctx));
     executor.bind('gpmemls', new GroupMemberList(ctx));
+    executor.bind('debuguser', new DebugUser(ctx));
 }
