@@ -95,7 +95,7 @@ export class RealMessageLike implements MessageLike {
 
 
     getReplyToId(): number | undefined {
-        return undefined;
+        return this.message.replyToMsgId;
     }
 
 }
