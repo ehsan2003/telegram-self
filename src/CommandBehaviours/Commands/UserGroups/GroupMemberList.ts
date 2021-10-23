@@ -1,4 +1,6 @@
 import {ICommandHandler} from "../../ICommandHandler";
+import BigInteger from 'big-integer';
+
 import {Context} from "../../../Context";
 import {MessageLike} from "../../MessageLike";
 import {SelfError} from "../../../SelfError";
@@ -19,7 +21,14 @@ export class GroupMemberList implements ICommandHandler {
         if (!groupName) {
             throw new SelfError('you must specify a group name');
         }
-        const users = await this.ctx.common.getUserGroupMembersInChat(messageLike.getChatId(), groupName);
+        const groupMembers = await this.ctx.prisma.userGroupMember.findMany({where: {group: {name: groupName}}});
+
+        const users = await this.ctx.client.invoke(new Api.users.GetUsers({
+            id: groupMembers.map(m => new Api.InputPeerUser({
+                userId: m.userId,
+                accessHash: BigInteger(m.accessHash.toString())
+            }))
+        })) as Api.User[];
         if (!users.length) {
             throw new SelfError(`no users found in this chat that belongs to ${groupName}`);
         }

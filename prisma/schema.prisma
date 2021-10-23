@@ -32,6 +32,7 @@ model UserGroup{
 model UserGroupMember{
   id String @id @default(cuid())
   userId Int
+  accessHash Decimal
   group UserGroup @relation(fields: [groupId],references: [id])
   groupId String
 }
