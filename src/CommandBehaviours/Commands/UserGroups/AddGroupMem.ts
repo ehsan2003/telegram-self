@@ -24,14 +24,16 @@ export class AddGroupMem extends BaseCommandHandler<AddGroupMemArgs> {
         await this.addUsersToDb(users, group.name);
     }
 
-    private async addUsersToDb(users: Api.User[], groupName: string) {
+    private async addUsersToDb(users: Api.User[], groupId: string) {
         for (const user of users) {
-            await this.ctx.prisma.userGroupMember.create({
-                data: {
-                    group: {connect: {name: groupName}},
+            await this.ctx.prisma.userGroupMember.upsert({
+                where: {groupId_userId: {userId: user.id, groupId: groupId}},
+                update: {},
+                create: {
+                    group: {connect: {name: groupId}},
                     userId: user.id,
                     accessHash: user.accessHash!.toString()
-                }
+                },
             })
         }
     }
