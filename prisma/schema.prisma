@@ -35,6 +35,8 @@ model UserGroupMember{
   accessHash Decimal
   group UserGroup @relation(fields: [groupId],references: [id])
   groupId String
+
+  @@unique([groupId,userId])
 }
 model PreparedTextCategory {
   id String @id @default(cuid())
