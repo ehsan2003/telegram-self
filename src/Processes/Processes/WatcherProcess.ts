@@ -1,8 +1,8 @@
 import {IProcess} from "../IProcess";
 import {filter, Subject, takeUntil} from "rxjs";
 import {Context} from "../../Context";
-import {NewMessageEvent} from "telegram/events";
-import {Api} from "telegram";
+import {NewMessageEvent} from "telegram/gramjs/events";
+import {Api} from "telegram/gramjs";
 import {getPeerId} from "../../utils";
 
 type ForwardableUpdates =

@@ -3,7 +3,7 @@ import yargsParser from "yargs-parser";
 import {MessageLike} from "../../MessageLike";
 import {SelfError} from "../../../SelfError";
 import {getPeerId, validateJoi} from "../../../utils";
-import {Api} from "telegram";
+import {Api} from "telegram/gramjs";
 import {stringify} from "yaml";
 import * as Joi from 'joi';
 

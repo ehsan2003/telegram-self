@@ -1,9 +1,9 @@
-import {TelegramClient} from "telegram";
+import {TelegramClient} from "telegram/gramjs";
 import {PreparedText, PrismaClient} from '@prisma/client'
 import _, {intersectionBy} from "lodash";
 import {SelfError} from "./SelfError";
 import {prepareLongMessage} from "./utils";
-import {EntityLike} from "telegram/define";
+import {EntityLike} from "telegram/gramjs/define";
 
 export class Common {
     constructor(protected client: TelegramClient, protected prisma: PrismaClient) {

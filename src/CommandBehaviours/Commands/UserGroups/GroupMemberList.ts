@@ -4,7 +4,7 @@ import BigInteger from 'big-integer';
 import {Context} from "../../../Context";
 import {MessageLike} from "../../MessageLike";
 import {SelfError} from "../../../SelfError";
-import {Api, utils} from "telegram";
+import {Api, utils} from "telegram/gramjs";
 import {table} from "table";
 
 export class GroupMemberList implements ICommandHandler {

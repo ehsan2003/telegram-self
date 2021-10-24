@@ -1,7 +1,7 @@
 import * as Joi from "joi";
 import {SelfError} from "./SelfError";
-import {SendMessageParams} from "telegram/client/messages";
-import {Api} from "telegram";
+import {SendMessageParams} from "telegram/gramjs/client/messages";
+import {Api} from "telegram/gramjs";
 
 export function validateJoi(validator: Joi.Schema, value: any) {
     const {error, value: validated} = validator.validate(value, {stripUnknown: true});

@@ -1,5 +1,5 @@
 import {NotifyBase, NotifyBaseArgs} from "./Notify.base";
-import {Api} from "telegram";
+import {Api} from "telegram/gramjs";
 import {MessageLike} from "../../MessageLike";
 
 export class NotifyAdmins extends NotifyBase<any> {

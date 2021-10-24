@@ -1,4 +1,4 @@
-import {Api} from "telegram";
+import {Api} from "telegram/gramjs";
 
 export interface MessageLike {
     getChatId(): number;

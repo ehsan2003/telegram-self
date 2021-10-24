@@ -1,5 +1,5 @@
-import {Logger, TelegramClient} from "telegram";
-import {StringSession} from "telegram/sessions";
+import {Logger, TelegramClient} from "telegram/gramjs";
+import {StringSession} from "telegram/gramjs/sessions";
 
 
 export async function initializeClient(logger: Logger): Promise<TelegramClient> {

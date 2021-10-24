@@ -1,6 +1,6 @@
 import {NotifyBase, NotifyBaseArgs} from "./Notify.base";
 import {MessageLike} from "../../MessageLike";
-import {Api} from "telegram";
+import {Api} from "telegram/gramjs";
 import {validateJoi} from "../../../utils";
 import * as Joi from "joi";
 import yargsParser, {Arguments} from "yargs-parser";

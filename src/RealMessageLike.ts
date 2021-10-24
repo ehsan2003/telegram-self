@@ -1,12 +1,12 @@
 import {MessageLike} from "./CommandBehaviours/MessageLike";
-import {Api} from "telegram";
-import {Message} from "telegram/tl/custom/message";
+import {Api} from "telegram/gramjs";
+import {CustomMessage} from "telegram/gramjs/tl/custom/message";
 import {Context} from "./Context";
 
 type MentionTextEntity = Api.InputMessageEntityMentionName | Api.MessageEntityMentionName | Api.MessageEntityMention;
 
 export class RealMessageLike implements MessageLike {
-    constructor(private ctx: Context, private message: Message) {
+    constructor(private ctx: Context, private message: CustomMessage) {
     }
 
     async delete(): Promise<void> {
@@ -59,7 +59,7 @@ export class RealMessageLike implements MessageLike {
     }
 
     private async resolveUsername(username: string) {
-        const user = await this.ctx.client.invoke(new Api.contacts.ResolveUsername({username}))
+        const user = await this.ctx.client.invoke(new Api.contacts.ResolveUsername({username: username.trim()}));
         return user.users[0] as Api.User
     }
 
@@ -73,7 +73,7 @@ export class RealMessageLike implements MessageLike {
     }
 
     private convertTypeMessagesToMessageArray(messages: Api.messages.TypeMessages): Api.Message[] | undefined {
-        if (messages.className === "MessagesNotModified") {
+        if (messages.className === "messages.MessagesNotModified") {
             return undefined;
         } else {
             return messages.messages.filter((msg): msg is Api.Message => msg.className === 'Message');

@@ -1,4 +1,4 @@
-import {utils} from "telegram";
+import {utils} from "telegram/gramjs";
 import {BaseCommandHandler} from "../../BaseCommandHandler";
 import yargsParser, {Arguments} from "yargs-parser";
 import {MessageLike} from "../../MessageLike";
