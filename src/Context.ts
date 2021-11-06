@@ -1,5 +1,5 @@
 import {Common} from "./Common";
-import {Api, Logger, TelegramClient} from "telegram/gramjs";
+import {Api, Logger, TelegramClient} from "telegram";
 import {PrismaClient} from "@prisma/client";
 import {Subject} from "rxjs";
 import {ICommandExecutor} from "./CommandBehaviours/ICommandExecutor";

@@ -5,7 +5,7 @@ import yargsParser from "yargs-parser";
 import {validateJoi} from "../../../utils";
 import * as Joi from 'joi';
 import {SelfError} from "../../../SelfError";
-import {Api} from "telegram/gramjs";
+import {Api} from "telegram";
 
 export type AddGroupMemArgs = {
     groupName: string;

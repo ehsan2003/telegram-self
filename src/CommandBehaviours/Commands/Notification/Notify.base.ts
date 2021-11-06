@@ -1,6 +1,6 @@
-import {Api, utils} from "telegram/gramjs";
+import {Api, utils} from "telegram";
 import {chunk} from "lodash";
-import {sleep} from "telegram/gramjs/Helpers";
+import {sleep} from "telegram/Helpers";
 import {BaseCommandHandler} from "../../BaseCommandHandler";
 import {MessageLike} from "../../MessageLike";
 import yargsParser, {Arguments} from "yargs-parser";

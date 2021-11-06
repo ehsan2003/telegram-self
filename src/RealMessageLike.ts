@@ -1,6 +1,6 @@
 import {MessageLike} from "./CommandBehaviours/MessageLike";
-import {Api} from "telegram/gramjs";
-import {CustomMessage} from "telegram/gramjs/tl/custom/message";
+import {Api} from "telegram";
+import {CustomMessage} from "telegram/tl/custom/message";
 import {Context} from "./Context";
 
 type MentionTextEntity = Api.InputMessageEntityMentionName | Api.MessageEntityMentionName | Api.MessageEntityMention;
